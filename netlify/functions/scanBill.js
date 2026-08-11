@@ -8,23 +8,22 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
     const imageBase64 = body.imageBase64;
+    
+    // Your hardcoded key
     const apiKey = process.env.GEMINI_API;
 
-    if (!apiKey) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'Server error: Missing API Key' }) };
-    }
-
     if (!imageBase64) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'No image data received from website' }) };
+      return { statusCode: 400, body: JSON.stringify({ error: 'No image data received' }) };
     }
 
-    // Safely strip the base64 prefix if it was included
     const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    
+    // Using gemini-pro-vision which has guaranteed support for image parsing on the v1 API
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
 
-    const prompt = "You are an expert utility bill parser. Analyze this Philippine electricity bill. Extract the following values exactly as they appear:\n1) Present meter reading\n2) Previous meter reading\n3) Total actual consumption (kWh)\n4) Total Amount Due (PHP).\n\nReturn ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Important: Strip out all commas from the numbers. If a value is missing, return null.";
+    const prompt = "Analyze this Philippine electricity bill. Extract the following values: 1) Present meter reading 2) Previous meter reading 3) Total actual consumption (kWh) 4) Total Amount Due (PHP). Return ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Strip all commas from numbers. If missing, return null.";
 
     const imageParts = [{
       inlineData: {
@@ -42,11 +41,10 @@ exports.handler = async (event) => {
       body: JSON.stringify({ text: response.text() })
     };
   } catch (error) {
-    // This safely catches ANY crash and sends the exact reason to your screen
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: error.message || 'Unknown Server Error' })
+      body: JSON.stringify({ error: error.message })
     };
   }
 };
