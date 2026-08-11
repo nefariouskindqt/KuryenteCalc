@@ -1911,36 +1911,16 @@ function takePhoto() {
             closeScannerModal();
         }
 
-        function handleImageUpload(e) {
+		function handleImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                
-                // Shrink the uploaded file to a max width of 800px
-                let width = img.width;
-                let height = img.height;
-                const MAX_WIDTH = 800;
-                
-                if (width > MAX_WIDTH) {
-                    height = height * (MAX_WIDTH / width);
-                    width = MAX_WIDTH;
-                }
-                
-                canvas.width = width;
-                canvas.height = height;
-                
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                
-                // Compress to JPEG at 70% quality and extract the data
-                const base64Data = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64Data = event.target.result.split(',')[1];
                 processBillScan(base64Data);
                 closeScannerModal();
             };
-            img.src = URL.createObjectURL(file);
+            reader.readAsDataURL(file);
         }
         // UPDATED: Now connects securely to your Netlify Function
 		async function processBillScan(base64Image) {
