@@ -8,7 +8,7 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
     const imageBase64 = body.imageBase64;
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API;
 
     if (!apiKey) {
       return { statusCode: 500, body: JSON.stringify({ error: 'Server error: Missing API Key' }) };
