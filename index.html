@@ -1891,15 +1891,22 @@
             }
         }
 
-        function takePhoto() {
+function takePhoto() {
             const video = document.getElementById('cameraVideo');
             const canvas = document.getElementById('captureCanvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0);
             
-            const base64Data = canvas.toDataURL('image/jpeg').split(',')[1];
+            // Shrink the camera image to a max width of 800px to bypass server limits
+            const MAX_WIDTH = 800;
+            const scaleSize = MAX_WIDTH / video.videoWidth;
+            
+            canvas.width = MAX_WIDTH;
+            canvas.height = video.videoHeight * scaleSize;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Compress to JPEG at 70% quality and extract the data
+            const base64Data = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
             processBillScan(base64Data);
             closeScannerModal();
         }
@@ -1907,15 +1914,34 @@
         function handleImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const base64Data = event.target.result.split(',')[1];
+            
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                
+                // Shrink the uploaded file to a max width of 800px
+                let width = img.width;
+                let height = img.height;
+                const MAX_WIDTH = 800;
+                
+                if (width > MAX_WIDTH) {
+                    height = height * (MAX_WIDTH / width);
+                    width = MAX_WIDTH;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Compress to JPEG at 70% quality and extract the data
+                const base64Data = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
                 processBillScan(base64Data);
                 closeScannerModal();
             };
-            reader.readAsDataURL(file);
+            img.src = URL.createObjectURL(file);
         }
-
         // UPDATED: Now connects securely to your Netlify Function
         async function processBillScan(base64Image) {
             const overlay = document.getElementById('aiScanOverlay');
