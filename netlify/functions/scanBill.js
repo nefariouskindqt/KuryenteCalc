@@ -6,41 +6,32 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { imageBase64 } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const imageBase64 = body.imageBase64;
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'Missing API Key' }) };
+      return { statusCode: 500, body: JSON.stringify({ error: 'Server error: Missing API Key' }) };
     }
 
-    // Strip the data URL prefix from the string
-    const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
+    if (!imageBase64) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'No image data received from website' }) };
+    }
 
-    // Force the model to output strict JSON
+    // Safely strip the base64 prefix if it was included
+    const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
+
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
-      generationConfig: { responseMimeType: "application/json" }
-    });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    // The strict prompt requiring JSON output and number parsing
-    const prompt = `You are an expert utility bill parser. Analyze this Philippine electricity bill. Extract the following values exactly as they appear: 
-    1) Present meter reading
-    2) Previous meter reading
-    3) Total actual consumption (kWh)
-    4) Total Amount Due (PHP). 
-    
-    Return ONLY a valid JSON object using these exact lowercase keys: "present", "previous", "kwh", "amount". 
-    Important: Strip out all commas from the numbers (e.g., 47,843 should be 47843). If a value is missing, return null.`;
+    const prompt = "You are an expert utility bill parser. Analyze this Philippine electricity bill. Extract the following values exactly as they appear:\n1) Present meter reading\n2) Previous meter reading\n3) Total actual consumption (kWh)\n4) Total Amount Due (PHP).\n\nReturn ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Important: Strip out all commas from the numbers. If a value is missing, return null.";
 
-    const imageParts = [
-      {
-        inlineData: {
-          data: base64Data,
-          mimeType: "image/jpeg" 
-        }
+    const imageParts = [{
+      inlineData: {
+        data: base64Data,
+        mimeType: "image/jpeg"
       }
-    ];
+    }];
 
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
@@ -51,7 +42,11 @@ exports.handler = async (event) => {
       body: JSON.stringify({ text: response.text() })
     };
   } catch (error) {
-    console.error('Error scanning bill:', error);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Internal Server Error' }) };
+    // This safely catches ANY crash and sends the exact reason to your screen
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: error.message || 'Unknown Server Error' })
+    };
   }
 };
