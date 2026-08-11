@@ -9,8 +9,12 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body);
     const imageBase64 = body.imageBase64;
     
-    // Your hardcoded key
+    // Safely retrieve your environment variable
     const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return { statusCode: 500, body: JSON.stringify({ error: 'Missing API Key in Netlify environment variables' }) };
+    }
 
     if (!imageBase64) {
       return { statusCode: 400, body: JSON.stringify({ error: 'No image data received' }) };
@@ -18,10 +22,12 @@ exports.handler = async (event) => {
 
     const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
 
+    // Explicitly target the v1beta API version which supports gemini-1.5-flash for images
     const genAI = new GoogleGenerativeAI(apiKey);
-    
-    // Using gemini-pro-vision which has guaranteed support for image parsing on the v1 API
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+    const model = genAI.getGenerativeModel(
+      { model: 'gemini-1.5-flash' },
+      { apiVersion: 'v1beta' }
+    );
 
     const prompt = "Analyze this Philippine electricity bill. Extract the following values: 1) Present meter reading 2) Previous meter reading 3) Total actual consumption (kWh) 4) Total Amount Due (PHP). Return ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Strip all commas from numbers. If missing, return null.";
 
