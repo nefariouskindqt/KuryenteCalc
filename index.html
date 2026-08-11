@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KuryenteCalc - Philippine Electricity Bill Estimator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hidden { display: none !important; }
+        .chat-container { max-height: 400px; overflow-y: auto; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <!-- AUTHENTICATION SCREEN -->
+    <div id="authScreen" class="min-h-screen flex items-center justify-center bg-blue-600 p-4">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center">
+            <h1 class="text-3xl font-bold text-blue-600 mb-2"><i class="fa-solid fa-bolt"></i> KuryenteCalc</h1>
+            <p class="text-gray-500 mb-8">Login to save your appliance data across devices.</p>
+            
+            <button id="btnGoogleSignIn" class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 mb-4 transition">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                Sign in with Google
+            </button>
+            
+            <div class="flex items-center my-4">
+                <div class="flex-grow border-t border-gray-300"></div>
+                <span class="px-3 text-gray-400 text-sm">OR</span>
+                <div class="flex-grow border-t border-gray-300"></div>
+            </div>
+            
+            <button id="btnGuestSignIn" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">
+                Continue as Guest
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN -->
+    <div id="mainAppScreen" class="hidden min-h-screen pb-20">
+        <!-- Navbar -->
+        <nav class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-xl font-bold"><i class="fa-solid fa-bolt text-yellow-300"></i> KuryenteCalc</h1>
+                <div class="flex items-center gap-4">
+                    <button id="btnSignOut" class="text-sm hover:text-gray-200"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mx-auto p-4 max-w-4xl mt-6">
+            
+            <!-- Global Settings -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h2 class="text-lg font-bold mb-4 text-gray-700">Provider & Rate Settings</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Utility Provider</label>
+                        <select id="providerSelect" class="w-full border rounded p-2 bg-gray-50">
+                            <option value="14.78" data-name="Meralco">Meralco (₱14.78/kWh)</option>
+                            <option value="12.88" data-name="VECO">VECO - Cebu (₱12.88/kWh)</option>
+                            <option value="12.30" data-name="Davao Light">Davao Light (₱12.30/kWh)</option>
+                            <option value="12.29" data-name="BENECO">BENECO - Baguio (₱12.29/kWh)</option>
+                            <option value="14.72" data-name="ILECO">ILECO - Iloilo (₱14.72/kWh)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Current Rate (₱/kWh)</label>
+                        <input type="number" id="kwhRate" value="14.78" step="0.01" class="w-full border rounded p-2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex border-b mb-6 overflow-x-auto">
+                <button class="tab-btn active px-4 py-2 border-b-2 border-blue-600 font-bold text-blue-600" data-target="appliances-tab">Appliance List</button>
+                <button class="tab-btn px-4 py-2 text-gray-500 hover:text-blue-500 font-medium" data-target="manual-bill-tab">Manual Reader & AI Scan</button>
+            </div>
+
+            <!-- TAB 1: Appliance List & Optimizer -->
+            <div id="appliances-tab" class="tab-content">
+                <!-- Add Appliance Form -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h2 class="text-lg font-bold mb-4 text-gray-700">Add Appliance</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" id="appName" placeholder="Appliance Name" class="border rounded p-2">
+                        <div class="flex">
+                            <input type="number" id="appPower" placeholder="Power" class="border rounded-l p-2 w-full">
+                            <select id="appPowerType" class="border border-l-0 rounded-r bg-gray-100 px-2">
+                                <option value="W">W</option>
+                                <option value="kW">kW</option>
+                            </select>
+                        </div>
+                        <input type="number" id="appHours" placeholder="Hours/Day" class="border rounded p-2">
+                        <button id="btnAddAppliance" class="bg-blue-600 text-white rounded p-2 hover:bg-blue-700"><i class="fa-solid fa-plus"></i> Add</button>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <input type="checkbox" id="vampireDraw" class="mr-2">
+                        <label for="vampireDraw" class="text-sm text-gray-600">Calculate Vampire Draw (Plugged in 24/7 when off)</label>
+                    </div>
+                </div>
+
+                <!-- Summary Dashboard -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl p-6 text-white shadow-md">
+                        <h3 class="text-sm opacity-80 mb-1">Estimated Monthly Bill</h3>
+                        <p id="totalCost" class="text-4xl font-bold">₱0.00</p>
+                    </div>
+                    <div class="bg-white border rounded-xl p-6 shadow-sm">
+                        <h3 class="text-sm text-gray-500 mb-1">Total Estimated Consumption</h3>
+                        <p id="totalKwh" class="text-3xl font-bold text-gray-800">0.00 kWh</p>
+                    </div>
+                </div>
+
+                <!-- Appliance List Table -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 text-sm uppercase">
+                                <th class="p-4 border-b">Appliance</th>
+                                <th class="p-4 border-b">Power</th>
+                                <th class="p-4 border-b">Usage</th>
+                                <th class="p-4 border-b">Est. Cost/Mo</th>
+                                <th class="p-4 border-b">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applianceTableBody">
+                            <!-- JS will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: Manual Bill Reader & AI Scanner -->
+            <div id="manual-bill-tab" class="tab-content hidden">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold text-gray-700">Manual Bill Calculator</h2>
+                        <button id="btnAiScan" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
+                            <i class="fa-solid fa-camera"></i> Scan Bill with AI
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="billImageInput" accept="image/*" class="hidden">
+                    <div id="aiScanLoading" class="hidden text-center p-4 text-purple-600 font-bold">
+                        <i class="fa-solid fa-spinner fa-spin mr-2"></i> AI is reading your bill...
+                    </div>
+                    <div id="aiScanResult" class="hidden bg-purple-50 p-4 border border-purple-200 rounded-lg mb-4 text-sm text-purple-800"></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm text-gray-600">Present Reading</label>
+                            <input type="number" id="presentReading" class="w-full border rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600">Previous Reading</label>
+                            <input type="number" id="previousReading" class="w-full border rounded p-2">
+                        </div>
+                        <div class="flex items-end">
+                            <button id="btnCalculateManual" class="w-full bg-blue-600 text-white rounded p-2 hover:bg-blue-700">Calculate</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 border rounded p-4 text-center">
+                        <p class="text-gray-500 text-sm">Billed Consumption (kWh)</p>
+                        <p id="manualKwh" class="text-2xl font-bold text-gray-800">0</p>
+                        <p class="text-gray-500 text-sm mt-4">Estimated Total Amount</p>
+                        <p id="manualTotal" class="text-3xl font-bold text-blue-600">₱0.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MANONG KURTI AI CHAT BOT -->
+        <div class="fixed bottom-6 right-6 z-50">
+            <button id="btnChatToggle" class="bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-2xl hover:bg-blue-700 transition transform hover:scale-110">
+                <i class="fa-solid fa-robot text-2xl"></i>
+            </button>
+        </div>
+
+        <div id="chatWindow" class="hidden fixed bottom-24 right-6 w-80 bg-white rounded-2xl shadow-2xl border flex flex-col z-50 overflow-hidden">
+            <div class="bg-blue-600 text-white p-3 font-bold flex justify-between items-center">
+                <span>Manong Kurti (AI)</span>
+                <button id="btnCloseChat" class="hover:text-gray-200"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div id="chatHistory" class="chat-container p-4 flex-grow text-sm space-y-3 bg-gray-50 h-64">
+                <div class="bg-gray-200 text-gray-800 p-2 rounded-lg self-start max-w-[85%]">
+                    Kumusta! Ako si Manong Kurti. Ano ang maitutulong ko sa kuryente bill mo ngayon?
+                </div>
+            </div>
+            <form id="chatForm" class="border-t p-2 flex bg-white">
+                <input type="text" id="chatInput" placeholder="Ask Manong Kurti..." class="flex-grow border rounded-l-lg p-2 outline-none text-sm" required>
+                <button type="submit" class="bg-blue-600 text-white px-3 rounded-r-lg hover:bg-blue-700"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Modular V9) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        
+        // --- IMPORTANT: REPLACE WITH YOUR FIREBASE CONFIG ---
+	const firebaseConfig = {
+  	apiKey: "AIzaSyC6DqkLWQHt0aflo7--VL_N4OGw1M3KuEY",
+  	authDomain: "kuryentecalc.firebaseapp.com",
+ 	projectId: "kuryentecalc",
+  	storageBucket: "kuryentecalc.firebasestorage.app",
+  	messagingSenderId: "431794441592",
+  	appId: "1:431794441592:web:d3d9a2f44b5837b590cc8d",
+  	measurementId: "G-TRK7Q4BM0S"
+	};
+
+        // ----------------------------------------------------
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // UI Elements
+        const authScreen = document.getElementById('authScreen');
+        const mainAppScreen = document.getElementById('mainAppScreen');
+        const btnGoogleSignIn = document.getElementById('btnGoogleSignIn');
+        const btnGuestSignIn = document.getElementById('btnGuestSignIn');
+        const btnSignOut = document.getElementById('btnSignOut');
+
+        // Auth Listeners
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authScreen.classList.add('hidden');
+                mainAppScreen.classList.remove('hidden');
+                initializeAppLogic(); // Start the app
+            } else {
+                authScreen.classList.remove('hidden');
+                mainAppScreen.classList.add('hidden');
+            }
+        });
+
+        btnGoogleSignIn.addEventListener('click', () => signInWithPopup(auth, provider));
+        btnGuestSignIn.addEventListener('click', () => signInAnonymously(auth));
+        btnSignOut.addEventListener('click', () => signOut(auth));
+
+        // --- CORE APP LOGIC ---
+        function initializeAppLogic() {
+            let appliances = [];
+            const rateInput = document.getElementById('kwhRate');
+            const providerSelect = document.getElementById('providerSelect');
+            let currentRate = parseFloat(rateInput.value);
+
+            // Update Rate from Provider Select
+            providerSelect.addEventListener('change', (e) => {
+                rateInput.value = e.target.value;
+                currentRate = parseFloat(e.target.value);
+                updateDashboard();
+            });
+            rateInput.addEventListener('input', (e) => {
+                currentRate = parseFloat(e.target.value) || 0;
+                updateDashboard();
+            });
+
+            // Add Appliance
+            document.getElementById('btnAddAppliance').addEventListener('click', () => {
+                const name = document.getElementById('appName').value;
+                const power = parseFloat(document.getElementById('appPower').value);
+                const powerType = document.getElementById('appPowerType').value;
+                const hours = parseFloat(document.getElementById('appHours').value);
+                const vampire = document.getElementById('vampireDraw').checked;
+
+                if (name && power && hours) {
+                    const watts = powerType === 'kW' ? power * 1000 : power;
+                    appliances.push({ name, watts, hours, vampire });
+                    
+                    document.getElementById('appName').value = '';
+                    document.getElementById('appPower').value = '';
+                    document.getElementById('appHours').value = '';
+                    document.getElementById('vampireDraw').checked = false;
+                    
+                    updateDashboard();
+                }
+            });
+
+            // Update Dashboard
+            function updateDashboard() {
+                const tbody = document.getElementById('applianceTableBody');
+                tbody.innerHTML = '';
+                let totalKwhMonth = 0;
+                let totalCostMonth = 0;
+
+                appliances.forEach((app, index) => {
+                    let kwhPerDay = (app.watts * app.hours) / 1000;
+                    
+                    // Add Vampire Draw (assuming 2W standby for the remaining hours of the day)
+                    if(app.vampire) {
+                        const standbyHours = 24 - app.hours;
+                        kwhPerDay += (2 * standbyHours) / 1000; 
+                    }
+
+                    const kwhPerMonth = kwhPerDay * 30;
+                    const costPerMonth = kwhPerMonth * currentRate;
+
+                    totalKwhMonth += kwhPerMonth;
+                    totalCostMonth += costPerMonth;
+
+                    const row = `
+                        <tr class="border-b hover:bg-gray-50 text-sm">
+                            <td class="p-4 flex items-center gap-2">
+                                ${app.name} ${app.vampire ? '<i class="fa-solid fa-ghost text-gray-400 text-xs" title="Vampire Draw Active"></i>' : ''}
+                            </td>
+                            <td class="p-4">${app.watts} W</td>
+                            <td class="p-4">${app.hours} hrs/day</td>
+                            <td class="p-4 font-medium text-blue-600">₱${costPerMonth.toFixed(2)}</td>
+                            <td class="p-4">
+                                <button onclick="window.deleteAppliance(${index})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+
+                document.getElementById('totalKwh').textContent = totalKwhMonth.toFixed(2) + ' kWh';
+                document.getElementById('totalCost').textContent = '₱' + totalCostMonth.toFixed(2);
+            }
+
+            // Expose delete to window for inline onclick
+            window.deleteAppliance = (index) => {
+                appliances.splice(index, 1);
+                updateDashboard();
+            };
+
+            // Manual Bill Calculator
+            document.getElementById('btnCalculateManual').addEventListener('click', () => {
+                const present = parseFloat(document.getElementById('presentReading').value) || 0;
+                const previous = parseFloat(document.getElementById('previousReading').value) || 0;
+                const consumption = Math.max(0, present - previous);
+                
+                document.getElementById('manualKwh').textContent = consumption;
+                document.getElementById('manualTotal').textContent = '₱' + (consumption * currentRate).toFixed(2);
+            });
+
+            // Tabs Logic
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab-btn').forEach(b => {
+                        b.classList.remove('active', 'border-blue-600', 'text-blue-600');
+                        b.classList.add('text-gray-500');
+                    });
+                    e.target.classList.add('active', 'border-blue-600', 'text-blue-600');
+                    e.target.classList.remove('text-gray-500');
+                    
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                    document.getElementById(e.target.dataset.target).classList.remove('hidden');
+                });
+            });
+
+            // AI BILL SCANNER (Netlify Function Call)
+            const btnAiScan = document.getElementById('btnAiScan');
+            const billImageInput = document.getElementById('billImageInput');
+            const aiScanLoading = document.getElementById('aiScanLoading');
+            const aiScanResult = document.getElementById('aiScanResult');
+
+            btnAiScan.addEventListener('click', () => billImageInput.click());
+            
+            billImageInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if(!file) return;
+
+                aiScanLoading.classList.remove('hidden');
+                aiScanResult.classList.add('hidden');
+
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = async () => {
+                    const base64Image = reader.result;
+
+                    try {
+                        const response = await fetch('/.netlify/functions/scanBill', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ imageBase64: base64Image })
+                        });
+
+                        if (!response.ok) throw new Error("Server Error");
+                        
+                        const data = await response.json();
+                        aiScanResult.innerHTML = `<strong>AI Analysis:</strong><br/>${data.text.replace(/\n/g, '<br/>')}`;
+                        aiScanResult.classList.remove('hidden');
+                    } catch (err) {
+                        aiScanResult.innerHTML = `<strong>Error:</strong> Failed to scan bill.`;
+                        aiScanResult.classList.remove('hidden');
+                    } finally {
+                        aiScanLoading.classList.add('hidden');
+                        billImageInput.value = '';
+                    }
+                };
+            });
+
+            // MANONG KURTI CHATBOT (Netlify Function Call)
+            const chatWindow = document.getElementById('chatWindow');
+            document.getElementById('btnChatToggle').addEventListener('click', () => chatWindow.classList.toggle('hidden'));
+            document.getElementById('btnCloseChat').addEventListener('click', () => chatWindow.classList.add('hidden'));
+
+            let chatHistory = [];
+            const chatDiv = document.getElementById('chatHistory');
+
+            function addChatMessage(text, sender) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `p-2 rounded-lg max-w-[85%] ${sender === 'user' ? 'bg-blue-100 text-blue-900 self-end ml-auto' : 'bg-gray-200 text-gray-800 self-start'}`;
+                msgDiv.textContent = text;
+                chatDiv.appendChild(msgDiv);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            }
+
+            document.getElementById('chatForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const inputEl = document.getElementById('chatInput');
+                const prompt = inputEl.value.trim();
+                if (!prompt) return;
+
+                addChatMessage(prompt, 'user');
+                inputEl.value = '';
+
+                // Build context
+                const providerName = providerSelect.options[providerSelect.selectedIndex].getAttribute('data-name');
+                const systemPrompt = `You are "Manong Kurti", a friendly Filipino electrician advising on the KuryenteCalc app. 
+                Context: User uses ${providerName} at ₱${currentRate}/kWh. Total Estimated Bill: ${document.getElementById('totalCost').textContent}. 
+                Respond in friendly Taglish. Keep it brief and helpful.`;
+
+                const formattedHistory = chatHistory.map(msg => ({
+                    role: msg.role === 'bot' ? 'model' : 'user',
+                    text: msg.text
+                }));
+
+                try {
+                    const response = await fetch('/.netlify/functions/askManongKurti', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt, history: formattedHistory, systemPrompt })
+                    });
+
+                    if (!response.ok) throw new Error("Server error");
+                    
+                    const data = await response.json();
+                    addChatMessage(data.answer, 'bot');
+                    
+                    chatHistory.push({ role: 'user', text: prompt });
+                    chatHistory.push({ role: 'bot', text: data.answer });
+                } catch (err) {
+                    addChatMessage("Pasensya na, nagkaroon ng connection error.", 'bot');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
