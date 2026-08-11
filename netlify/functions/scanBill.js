@@ -13,13 +13,25 @@ exports.handler = async (event) => {
       return { statusCode: 500, body: JSON.stringify({ error: 'Missing API Key' }) };
     }
 
-    // Strip the "data:image/jpeg;base64," prefix from the string
+    // Strip the data URL prefix from the string
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
 
+    // Force the model to output strict JSON
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-1.5-flash',
+      generationConfig: { responseMimeType: "application/json" }
+    });
 
-    const prompt = "Analyze this utility bill. Please extract the following: 1. Present Reading 2. Previous Reading 3. Total kWh Consumed 4. Total Amount Due. Ensure the math matches up. Respond concisely.";
+    // The strict prompt requiring JSON output and number parsing
+    const prompt = `You are an expert utility bill parser. Analyze this Philippine electricity bill. Extract the following values exactly as they appear: 
+    1) Present meter reading
+    2) Previous meter reading
+    3) Total actual consumption (kWh)
+    4) Total Amount Due (PHP). 
+    
+    Return ONLY a valid JSON object using these exact lowercase keys: "present", "previous", "kwh", "amount". 
+    Important: Strip out all commas from the numbers (e.g., 47,843 should be 47843). If a value is missing, return null.`;
 
     const imageParts = [
       {
