@@ -1970,11 +1970,10 @@ function takePhoto() {
             } catch (err) {
                 showMessage("Scan failed: " + err.message, "error");
                 console.error(err);
-            } finally {
-                overlay.classList.add('hidden');
-                overlay.classList.remove('flex');
-            }
-        }
+			} finally {
+    			overlay.classList.remove('flex');
+    			overlay.classList.add('hidden');
+			}
 		
         window.scannedDataStore = {};
 
