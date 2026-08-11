@@ -1943,12 +1943,13 @@ function takePhoto() {
             img.src = URL.createObjectURL(file);
         }
         // UPDATED: Now connects securely to your Netlify Function
-async function processBillScan(base64Image) {
+		async function processBillScan(base64Image) {
             const overlay = document.getElementById('aiScanOverlay');
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
             
             try {
+                // This calls your secure Netlify function, avoiding all browser version mismatches
                 const response = await fetch('/.netlify/functions/scanBill', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1957,18 +1958,16 @@ async function processBillScan(base64Image) {
 
                 const data = await response.json();
                 
-                // If the server caught an error, throw it so the UI displays it!
                 if (!response.ok) {
                     throw new Error(data.error || "Server Error");
                 }
                 
-                // Clean the text and parse the JSON
+                // Clean and parse the JSON returned from your backend function
                 let rawText = data.text.replace(/```json/g, '').replace(/```/g, '').trim();
                 const result = JSON.parse(rawText);
                 
                 showScanResults(result);
             } catch (err) {
-                // This displays the exact error in the popup!
                 showMessage("Scan failed: " + err.message, "error");
                 console.error(err);
             } finally {
@@ -1976,6 +1975,7 @@ async function processBillScan(base64Image) {
                 overlay.classList.remove('flex');
             }
         }
+		
         window.scannedDataStore = {};
 
         function showScanResults(data) {
