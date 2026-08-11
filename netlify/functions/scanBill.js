@@ -10,7 +10,7 @@ exports.handler = async (event) => {
     const imageBase64 = body.imageBase64;
     
     // Your hardcoded key
-    const apiKey = process.env.GEMINI_API;
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!imageBase64) {
       return { statusCode: 400, body: JSON.stringify({ error: 'No image data received' }) };
