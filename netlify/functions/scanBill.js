@@ -27,9 +27,9 @@ exports.handler = async (event) => {
 
     const prompt = "Analyze this Philippine electricity bill. Extract the following values: 1) Present meter reading 2) Previous meter reading 3) Total actual consumption (kWh) 4) Total Amount Due (PHP). Return ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Strip all commas from numbers. If missing, return null.";
 
-    // Use the standard generateContent method expected in v2+
+    // Use the current stable 2026 model
     const response = await ai.models.generateContent({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-3.6-flash',
         contents: [
             prompt,
             {
@@ -53,4 +53,3 @@ exports.handler = async (event) => {
       body: JSON.stringify({ error: error.message })
     };
   }
-}
