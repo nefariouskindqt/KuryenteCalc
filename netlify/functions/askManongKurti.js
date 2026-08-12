@@ -23,7 +23,7 @@ exports.handler = async function(event, context) {
         combinedInput += `\nUser: ${prompt}`;
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-1.5-flash",
             contents: combinedInput
         });
         
