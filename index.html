@@ -1992,47 +1992,29 @@
             input.value = '';
 
             try {
-                const systemPrompt = `You are Manong Kurti, a helpful, knowledgeable, and friendly Filipino electrician and energy expert. You speak in conversational English with a bit of Taglish. You are helping a user lower their electricity bill.
-Current App Data Context:
-- User's Electricity Rate: ₱${document.getElementById('globalRate').value}/kWh
-- Total Monthly Estimated Bill: ₱${currentTotalCost.toFixed(2)}
-- Total kWh: ${currentTotalKwh.toFixed(2)}
-- Appliances List: ${JSON.stringify(window.appliances.map(a => `${a.qty}x ${a.name} (${a.wattage}${a.unit} for ${a.hours}h/day)`))}
-- Savings Plans: ${JSON.stringify(window.savingPlans)}
-Be concise. Keep responses under 3 paragraphs. Only offer advice based on the context provided.`;
+                // Safely handle relative URLs when running in the preview window
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                const baseUrl = isPreview ? 'https://whimsical-brioche-73c97d.netlify.app' : '';
 
-                const formattedHistory = chatHistory.map(msg => ({
-                    role: msg.role === 'user' ? 'user' : 'bot',
-                    text: msg.text
-                }));
-
-                const response = await fetch('/.netlify/functions/askManongKurti', {
+                const response = await fetch(baseUrl + '/.netlify/functions/askManongKurti', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: prompt, 
-                        history: formattedHistory, 
-                        systemPrompt: systemPrompt 
-                    })
+                    body: JSON.stringify({ prompt: prompt, history: chatHistory, systemPrompt: "You are Manong Kurti, a helpful Filipino electrician." })
                 });
-
-                if (!response.ok) throw new Error("Server error");
                 
                 const data = await response.json();
-                
-                document.getElementById(loadingId).remove();
+                if (!response.ok) throw new Error(data.error || "Server Error");
                 
                 addChatMessage(data.answer, 'bot');
                 chatHistory.push({ role: 'user', text: prompt });
                 chatHistory.push({ role: 'bot', text: data.answer });
-
             } catch (err) {
-                document.getElementById(loadingId)?.remove();
-                addChatMessage("Pasensya na boss, I am having trouble connecting right now. Please try again.", 'bot');
-            } finally {
-                input.disabled = false;
-                submitBtn.disabled = false;
-                input.focus();
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                if (isPreview) {
+                    addChatMessage("I am inside the preview window right now! To connect to my AI brain, please view this app directly on your live Netlify site.", 'bot');
+                } else {
+                    addChatMessage("Pasensya na boss, connection error.", 'bot');
+                }
             }
         }
 
