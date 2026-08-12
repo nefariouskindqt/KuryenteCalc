@@ -1,3 +1,5 @@
+const https = require('https');
+
 exports.handler = async function(event) {
     if (event.httpMethod !== "POST") {
         return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
@@ -7,11 +9,9 @@ exports.handler = async function(event) {
         const { prompt, history, systemPrompt } = JSON.parse(event.body);
         const apiKey = process.env.GEMINI_API_KEY;
 
-        if (!apiKey) {
-            return { statusCode: 500, body: JSON.stringify({ error: "Missing API Key" }) };
+        if (!apiKey || apiKey.trim() === '') {
+            return { statusCode: 400, body: JSON.stringify({ error: "Missing GEMINI_API_KEY in Netlify environment variables." }) };
         }
-
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
         let combinedInput = systemPrompt + "\n\nConversation History:\n";
         (history || []).forEach(msg => {
@@ -23,22 +23,34 @@ exports.handler = async function(event) {
             contents: [{ role: "user", parts: [{ text: combinedInput }] }]
         };
 
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+        const result = await new Promise((resolve, reject) => {
+            const req = https.request({
+                hostname: 'generativelanguage.googleapis.com',
+                port: 443,
+                path: `/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            }, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => resolve({ statusCode: res.statusCode, data: data }));
+            });
+            
+            req.on('error', e => reject(e));
+            req.write(JSON.stringify(payload));
+            req.end();
         });
 
-        const data = await response.json();
+        const googleData = JSON.parse(result.data);
 
-        if (!response.ok) {
+        if (result.statusCode !== 200) {
             return {
-                statusCode: response.status,
-                body: JSON.stringify({ error: data.error?.message || "Google API Error" })
+                statusCode: 400,
+                body: JSON.stringify({ error: googleData.error?.message || "Google API blocked the request." })
             };
         }
 
-        const answer = data.candidates[0].content.parts[0].text;
+        const answer = googleData.candidates[0].content.parts[0].text;
 
         return { 
             statusCode: 200, 
@@ -48,6 +60,7 @@ exports.handler = async function(event) {
     } catch (error) {
         return { 
             statusCode: 500, 
-            body: JSON.stringify({ error: String(error) }) 
+            body: JSON.stringify({ error: `Backend crash: ${error.message}` }) 
         };
     }
+};
