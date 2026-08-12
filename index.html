@@ -1973,109 +1973,62 @@
             showMessage("Scan applied successfully.");
         }
 
-        // --- Manong Kurti Chatbot ---
+        // Manong Kurti Chatbot
         let chatHistory = [];
         
         function toggleChat() {
             const win = document.getElementById('chatWindow');
-            if(win.classList.contains('hidden')) {
-                win.classList.remove('hidden');
-                setTimeout(() => {
-                    win.classList.remove('translate-y-10', 'opacity-0');
-                    document.getElementById('chatInput').focus();
-                }, 10);
-            } else {
-                win.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => win.classList.add('hidden'), 300);
-            }
+            win.classList.toggle('hidden');
+            win.classList.toggle('flex');
         }
 
         async function handleChatSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('chatInput');
-            const submitBtn = document.getElementById('chatSubmitBtn');
-            const messagesDiv = document.getElementById('chatMessages');
             const prompt = input.value.trim();
             if (!prompt) return;
-
+            
             addChatMessage(prompt, 'user');
             input.value = '';
-            input.disabled = true;
-            submitBtn.disabled = true;
-
-            const loadingId = 'msg-' + Date.now();
-            const loadingHTML = `
-                <div id="${loadingId}" class="flex gap-2 items-end">
-                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
-                        <i class="fa-solid fa-robot text-sm"></i>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-500 shadow-sm flex gap-1">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce"></span>
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.2s"></span>
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.4s"></span>
-                    </div>
-                </div>
-            `;
-            messagesDiv.insertAdjacentHTML('beforeend', loadingHTML);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             try {
-                const systemPrompt = `You are Manong Kurti, a helpful, knowledgeable, and friendly Filipino electrician and energy expert. You speak in conversational English with a bit of Taglish. You are helping a user lower their electricity bill.
-Current App Data Context:
-- User's Electricity Rate: ₱${document.getElementById('globalRate').value}/kWh
-- Total Monthly Estimated Bill: ₱${currentTotalCost.toFixed(2)}
-- Total kWh: ${currentTotalKwh.toFixed(2)}
-- Appliances List: ${JSON.stringify(window.appliances.map(a => `${a.qty}x ${a.name} (${a.wattage}${a.unit} for ${a.hours}h/day)`))}
-- Savings Plans: ${JSON.stringify(window.savingPlans)}
-Be concise. Keep responses under 3 paragraphs. Only offer advice based on the context provided.`;
+                // Safely handle relative URLs when running in the preview window
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                const baseUrl = isPreview ? 'https://whimsical-brioche-73c97d.netlify.app' : '';
 
-                const formattedHistory = chatHistory.map(msg => ({
-                    role: msg.role === 'user' ? 'user' : 'bot',
-                    text: msg.text
-                }));
-
-                const response = await fetch('/.netlify/functions/askManongKurti', {
+                const response = await fetch(baseUrl + '/.netlify/functions/askManongKurti', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: prompt, 
-                        history: formattedHistory, 
-                        systemPrompt: systemPrompt 
-                    })
+                    body: JSON.stringify({ prompt: prompt, history: chatHistory, systemPrompt: "You are Manong Kurti, a helpful Filipino electrician." })
                 });
-
-                if (!response.ok) throw new Error("Server error");
                 
                 const data = await response.json();
-                
-                document.getElementById(loadingId).remove();
+                if (!response.ok) throw new Error(data.error || "Server Error");
                 
                 addChatMessage(data.answer, 'bot');
                 chatHistory.push({ role: 'user', text: prompt });
                 chatHistory.push({ role: 'bot', text: data.answer });
-
             } catch (err) {
-                document.getElementById(loadingId)?.remove();
-                addChatMessage("Pasensya na boss, I am having trouble connecting right now. Please try again.", 'bot');
-            } finally {
-                input.disabled = false;
-                submitBtn.disabled = false;
-                input.focus();
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                if (isPreview) {
+                    addChatMessage("I am inside the preview window right now! To connect to my AI brain, please view this app directly on your live Netlify site.", 'bot');
+                } else {
+                    addChatMessage("Pasensya na boss, connection error.", 'bot');
+                }
             }
         }
 
         function addChatMessage(text, sender) {
             const messagesDiv = document.getElementById('chatMessages');
-            let html = '';
             
-            const formattedText = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
+            // Format bold text and escape HTML
+            let formattedText = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            let html = '';
             if (sender === 'user') {
                 html = `
                     <div class="flex gap-2 items-end justify-end">
-                        <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-sm text-sm shadow-sm max-w-[85%] whitespace-pre-wrap">
-                            ${formattedText}
-                        </div>
+                        <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-sm text-sm shadow-sm max-w-[85%] whitespace-pre-wrap">${formattedText}</div>
                     </div>
                 `;
             } else {
@@ -2084,14 +2037,16 @@ Be concise. Keep responses under 3 paragraphs. Only offer advice based on the co
                         <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
                             <i class="fa-solid fa-robot text-sm"></i>
                         </div>
-                        <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm max-w-[85%] leading-relaxed whitespace-pre-wrap">
-                            ${formattedText}
-                        </div>
+                        <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm max-w-[85%] leading-relaxed whitespace-pre-wrap">${formattedText}</div>
                     </div>
                 `;
             }
             messagesDiv.insertAdjacentHTML('beforeend', html);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // Auto-scroll to the bottom smoothly
+            setTimeout(() => {
+                messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
+            }, 50);
         }
     </script>
 
