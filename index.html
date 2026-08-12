@@ -1985,31 +1985,11 @@
         async function handleChatSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('chatInput');
-            const submitBtn = document.getElementById('chatSubmitBtn');
-            const messagesDiv = document.getElementById('chatMessages');
             const prompt = input.value.trim();
             if (!prompt) return;
-
+            
             addChatMessage(prompt, 'user');
             input.value = '';
-            input.disabled = true;
-            submitBtn.disabled = true;
-
-            const loadingId = 'msg-' + Date.now();
-            const loadingHTML = `
-                <div id="${loadingId}" class="flex gap-2 items-end">
-                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
-                        <i class="fa-solid fa-robot text-sm"></i>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-500 shadow-sm flex gap-1">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce"></span>
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.2s"></span>
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.4s"></span>
-                    </div>
-                </div>
-            `;
-            messagesDiv.insertAdjacentHTML('beforeend', loadingHTML);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             try {
                 const systemPrompt = `You are Manong Kurti, a helpful, knowledgeable, and friendly Filipino electrician and energy expert. You speak in conversational English with a bit of Taglish. You are helping a user lower their electricity bill.
