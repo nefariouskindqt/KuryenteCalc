@@ -1973,81 +1973,150 @@
             showMessage("Scan applied successfully.");
         }
 
-        // --- Manong Kurti Chatbot ---
-        let chatHistory = [];
-        
-        function toggleChat() {
-            const win = document.getElementById('chatWindow');
-            win.classList.toggle('hidden');
-            win.classList.toggle('flex');
-        }
+<style>
+    /* Ensure the chat messages container properly restricts height and enables scrolling */
+    #chatMessages {
+        flex: 1 1 0%;
+        min-height: 0px;
+        overflow-y: auto;
+    }
+</style>
 
-        async function handleChatSubmit(e) {
-            e.preventDefault();
-            const input = document.getElementById('chatInput');
-            const prompt = input.value.trim();
-            if (!prompt) return;
-            
-            addChatMessage(prompt, 'user');
-            input.value = '';
-
-            try {
-                // Safely handle relative URLs when running in the preview window
-                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
-                const baseUrl = isPreview ? 'https://whimsical-brioche-73c97d.netlify.app' : '';
-
-                const response = await fetch(baseUrl + '/.netlify/functions/askManongKurti', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: prompt, history: chatHistory, systemPrompt: "You are Manong Kurti, a helpful Filipino electrician." })
-                });
-                
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || "Server Error");
-                
-                addChatMessage(data.answer, 'bot');
-                chatHistory.push({ role: 'user', text: prompt });
-                chatHistory.push({ role: 'bot', text: data.answer });
-            } catch (err) {
-                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
-                if (isPreview) {
-                    addChatMessage("I am inside the preview window right now! To connect to my AI brain, please view this app directly on your live Netlify site.", 'bot');
-                } else {
-                    addChatMessage("Pasensya na boss, connection error.", 'bot');
-                }
-            }
-        }
-
-        function addChatMessage(text, sender) {
-            const messagesDiv = document.getElementById('chatMessages');
-            
-            // Format bold text and escape HTML
-            let formattedText = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            let html = '';
-            if (sender === 'user') {
-                html = `
-                    <div class="flex gap-2 items-end justify-end">
-                        <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-sm text-sm shadow-sm max-w-[85%] whitespace-pre-wrap">${formattedText}</div>
-                    </div>
-                `;
-            } else {
-                html = `
-                    <div class="flex gap-2 items-end">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
-                            <i class="fa-solid fa-robot text-sm"></i>
-                        </div>
-                        <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm max-w-[85%] leading-relaxed whitespace-pre-wrap">${formattedText}</div>
-                    </div>
-                `;
-            }
-            messagesDiv.insertAdjacentHTML('beforeend', html);
-            
-            // Auto-scroll to the bottom smoothly
+<script>
+    // --- Manong Kurti Chatbot Logic (Fixed Scrolling & Autocomplete) ---
+    let chatHistory = [];
+    
+    function toggleChat() {
+        const win = document.getElementById('chatWindow');
+        if(win.classList.contains('hidden')) {
+            win.classList.remove('hidden');
+            win.classList.add('flex');
             setTimeout(() => {
-                messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
-            }, 50);
+                win.classList.remove('translate-y-10', 'opacity-0');
+                const chatInput = document.getElementById('chatInput');
+                if(chatInput) chatInput.focus();
+            }, 10);
+        } else {
+            win.classList.add('translate-y-10', 'opacity-0');
+            setTimeout(() => {
+                win.classList.remove('flex');
+                win.classList.add('hidden');
+            }, 300);
         }
+    }
+
+    async function handleChatSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById('chatInput');
+        const submitBtn = document.getElementById('chatSubmitBtn');
+        const messagesDiv = document.getElementById('chatMessages');
+        const prompt = input.value.trim();
+        if (!prompt) return;
+
+        addChatMessage(prompt, 'user');
+        input.value = '';
+        input.disabled = true;
+        submitBtn.disabled = true;
+
+        const loadingId = 'msg-' + Date.now();
+        const loadingHTML = `
+            <div id="${loadingId}" class="flex gap-2 items-end">
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
+                    <i class="fa-solid fa-robot text-sm"></i>
+                </div>
+                <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-500 shadow-sm flex gap-1">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce"></span>
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.2s"></span>
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.4s"></span>
+                </div>
+            </div>
+        `;
+        messagesDiv.insertAdjacentHTML('beforeend', loadingHTML);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        try {
+            const systemPrompt = `You are Manong Kurti, a helpful, knowledgeable, and friendly Filipino electrician and energy expert. You speak in conversational English with a bit of Taglish. You are helping a user lower their electricity bill.
+Current App Data Context:
+- User's Electricity Rate: ₱${document.getElementById('globalRate')?.value || 14.78}/kWh
+- Total Monthly Estimated Bill: ₱${typeof currentTotalCost !== 'undefined' ? currentTotalCost.toFixed(2) : '0.00'}
+- Total kWh: ${typeof currentTotalKwh !== 'undefined' ? currentTotalKwh.toFixed(2) : '0.00'}
+- Appliances List: ${JSON.stringify((window.appliances || []).map(a => `${a.qty}x ${a.name} (${a.wattage}${a.unit} for ${a.hours}h/day)`))}
+Be concise. Keep responses under 3 paragraphs. Only offer advice based on the context provided.`;
+
+            const formattedHistory = chatHistory.map(msg => ({
+                role: msg.role === 'user' ? 'user' : 'bot',
+                text: msg.text
+            }));
+
+            const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+            const baseUrl = isPreview ? 'https://whimsical-brioche-73c97d.netlify.app' : '';
+
+            const response = await fetch(baseUrl + '/.netlify/functions/askManongKurti', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    prompt: prompt, 
+                    history: formattedHistory, 
+                    systemPrompt: systemPrompt 
+                })
+            });
+
+            if (!response.ok) throw new Error("Server error");
+            
+            const data = await response.json();
+            
+            document.getElementById(loadingId)?.remove();
+            
+            addChatMessage(data.answer, 'bot');
+            chatHistory.push({ role: 'user', text: prompt });
+            chatHistory.push({ role: 'bot', text: data.answer });
+
+        } catch (err) {
+            document.getElementById(loadingId)?.remove();
+            const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+            if (isPreview) {
+                addChatMessage("I am inside the preview window right now! To chat with me with your live data, please open your deployed Netlify website.", 'bot');
+            } else {
+                addChatMessage("Pasensya na boss, connection error. Please try again.", 'bot');
+            }
+        } finally {
+            input.disabled = false;
+            submitBtn.disabled = false;
+            input.focus();
+        }
+    }
+
+    function addChatMessage(text, sender) {
+        const messagesDiv = document.getElementById('chatMessages');
+        if (!messagesDiv) return;
+
+        let html = '';
+        let formattedText = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        if (sender === 'user') {
+            html = `
+                <div class="flex gap-2 items-end justify-end">
+                    <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-sm text-sm shadow-sm max-w-[85%] whitespace-pre-wrap">${formattedText}</div>
+                </div>
+            `;
+        } else {
+            html = `
+                <div class="flex gap-2 items-end">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
+                        <i class="fa-solid fa-robot text-sm"></i>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm max-w-[85%] leading-relaxed whitespace-pre-wrap">${formattedText}</div>
+                </div>
+            `;
+        }
+        messagesDiv.insertAdjacentHTML('beforeend', html);
+        
+        // Force scrollbar to stick to bottom when new message arrives
+        setTimeout(() => {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }, 50);
+    }
+</script>
     </script>
 
     <!-- FIREBASE CLOUD SYNC -->
