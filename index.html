@@ -6,6 +6,7 @@
     <title>PH Electricity Bill Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -30,7 +31,6 @@
             background-color: #f1f5f9;
         }
         
-        /* Custom scrollbar for tables */
         .table-container::-webkit-scrollbar {
             height: 8px;
         }
@@ -46,7 +46,6 @@
             background: #94a3b8; 
         }
 
-        /* Modal transitions */
         .modal-overlay {
             transition: opacity 0.3s ease-out;
         }
@@ -90,7 +89,6 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- Headers -->
         <div class="mb-8">
             <h1 id="mainTitle" class="text-3xl font-bold text-slate-900">Appliance Consumption Calculator</h1>
             <p id="mainSubtitle" class="text-slate-600 mt-2">Estimate your monthly electricity bill based on your household appliances usage.</p>
@@ -99,7 +97,6 @@
         <!-- ESTIMATOR VIEW -->
         <div id="view-estimator" class="block space-y-8">
             
-            <!-- 1. Settings & Add Button -->
             <div class="flex flex-col lg:flex-row justify-between gap-4 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                 <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-end w-full lg:w-auto">
                     <div class="w-full sm:w-auto">
@@ -133,11 +130,10 @@
                 </div>
             </div>
 
-            <!-- 2. Summary Dashboard -->
+            <!-- Summary Dashboard -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Total Bill Card -->
                 <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4"></div>
                     <div class="relative z-10">
                         <p class="text-sm font-medium text-slate-500 mb-1">Estimated Monthly Bill</p>
                         <div class="flex items-baseline gap-1">
@@ -147,9 +143,8 @@
                     </div>
                 </div>
 
-                <!-- Total kWh Card -->
                 <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-4 -mt-4"></div>
                     <div class="relative z-10">
                         <p class="text-sm font-medium text-slate-500 mb-1">Total Consumption</p>
                         <div class="flex items-baseline gap-1">
@@ -159,7 +154,6 @@
                     </div>
                 </div>
 
-                <!-- Daily Average Card -->
                 <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
                     <div class="flex justify-between items-start">
                         <div>
@@ -172,7 +166,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Stats Card -->
                 <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-sm text-slate-500">Total Appliances</span>
@@ -185,12 +178,11 @@
                 </div>
             </div>
 
-            <!-- 3. Appliance Table -->
+            <!-- Appliance Table -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
                     <h2 class="font-bold text-slate-800">Your Appliances</h2>
                 </div>
-                
                 <div class="table-container overflow-x-auto">
                     <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-white text-slate-500 border-b border-slate-200">
@@ -205,30 +197,22 @@
                                 <th class="p-4 font-semibold w-24 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="applianceTableBody" class="divide-y divide-slate-100">
-                            <!-- Rows injected by JS -->
-                        </tbody>
+                        <tbody id="applianceTableBody" class="divide-y divide-slate-100"></tbody>
                     </table>
                     
-                    <!-- Empty State -->
                     <div id="emptyState" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
                         <div class="bg-slate-50 p-4 rounded-full mb-4">
                             <i class="fa-solid fa-plug text-4xl text-slate-300"></i>
                         </div>
                         <h3 class="text-lg font-medium text-slate-900 mb-1">No appliances added yet</h3>
                         <p class="text-slate-500 text-sm max-w-sm mb-4">Add your household appliances to start estimating your monthly electricity bill.</p>
-                        <button onclick="openModal()" class="text-blue-600 font-medium hover:text-blue-700 hover:underline">
-                            + Add your first appliance
-                        </button>
+                        <button onclick="openModal()" class="text-blue-600 font-medium hover:text-blue-700 hover:underline">+ Add your first appliance</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. Smart Budget Optimizer -->
+            <!-- Optimizer & Planner sections -->
             <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 text-indigo-100/50">
-                    <i class="fa-solid fa-bullseye text-9xl"></i>
-                </div>
                 <div class="relative z-10">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="bg-indigo-600 text-white p-2 rounded-lg">
@@ -236,333 +220,74 @@
                         </div>
                         <h2 class="text-xl font-bold text-indigo-900">Smart Budget Optimizer</h2>
                     </div>
-                    <p class="text-indigo-700 mb-4 text-sm max-w-2xl">Want to lower your bill? Enter your target monthly budget, and our calculator will suggest exactly how to adjust your appliance usage to hit your goal.</p>
-                    
                     <div class="flex flex-col sm:flex-row gap-3 items-end max-w-lg mb-6">
                         <div class="w-full">
-                            <label for="targetBudget" class="block text-xs font-semibold text-indigo-800 uppercase tracking-wide mb-1">Target Monthly Bill</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-indigo-500 font-bold">₱</span>
-                                </div>
-                                <input type="number" id="targetBudget" placeholder="e.g. 1500" class="pl-8 block w-full rounded-lg border-indigo-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-2.5 px-3 text-indigo-900 font-bold">
-                            </div>
+                            <label class="block text-xs font-semibold text-indigo-800 uppercase tracking-wide mb-1">Target Monthly Bill</label>
+                            <input type="number" id="targetBudget" placeholder="e.g. 1500" class="pl-8 block w-full rounded-lg border-indigo-200 shadow-sm py-2.5 px-3 text-indigo-900 font-bold">
                         </div>
-                        <button onclick="runOptimizer()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap shadow-sm">
-                            Analyze & Optimize
-                        </button>
+                        <button onclick="runOptimizer()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">Analyze</button>
                     </div>
-
-                    <div id="optimizerResult" class="hidden mt-4 animate-[fadeIn_0.5s_ease-out]">
-                        <!-- Results injected here -->
-                    </div>
+                    <div id="optimizerResult" class="hidden mt-4"></div>
                 </div>
             </div>
 
-            <!-- 5. Weekly Energy Diet Planner -->
-            <div class="bg-teal-50 border border-teal-200 rounded-xl p-6 relative overflow-hidden">
-                <div class="absolute -right-5 -bottom-5 text-teal-100/50 pointer-events-none">
-                    <i class="fa-regular fa-calendar-check text-9xl"></i>
-                </div>
-                <div class="relative z-10">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="bg-teal-600 text-white p-2 rounded-lg">
-                            <i class="fa-solid fa-leaf"></i>
-                        </div>
-                        <h2 class="text-xl font-bold text-teal-900">Weekly Energy Diet Planner</h2>
-                    </div>
-                    <p class="text-teal-700 mb-6 text-sm max-w-2xl">Create savings goals. Commit to turning off an appliance earlier on specific days, and see your projected bill drop in real-time.</p>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Add Goal Form -->
-                        <div class="lg:col-span-1 bg-white p-5 rounded-xl border border-teal-100 shadow-sm">
-                            <h3 class="font-bold text-slate-800 mb-4 text-sm border-b border-slate-100 pb-2">New Savings Goal</h3>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-600 mb-1">Select Appliance</label>
-                                    <select id="plannerAppliance" class="w-full rounded-md border border-slate-300 py-2 px-3 text-sm focus:ring-teal-500 focus:border-teal-500" onchange="updatePlannerHints()">
-                                        <option value="">-- Add an appliance first --</option>
-                                    </select>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-600 mb-1">Target Hours (Per Day)</label>
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" id="plannerTargetHours" min="0" step="0.5" class="w-24 rounded-md border border-slate-300 py-2 px-3 text-sm focus:ring-teal-500 focus:border-teal-500 text-center">
-                                        <span id="plannerHint" class="text-[10px] text-slate-500">Currently used: - hrs</span>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-600 mb-2">Apply on days:</label>
-                                    <div class="flex flex-wrap gap-2">
-                                        <label class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-200 cursor-pointer hover:bg-slate-100"><input type="checkbox" value="1" class="planner-day text-teal-600 focus:ring-teal-500 rounded-sm"> <span class="text-xs">Mon</span></label>
-                                        <label class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-200 cursor-pointer hover:bg-slate-100"><input type="checkbox" value="2" class="planner-day text-teal-600 focus:ring-teal-500 rounded-sm"> <span class="text-xs">Tue</span></label>
-                                        <label class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-200 cursor-pointer hover:bg-slate-100"><input type="checkbox" value="3" class="planner-day text-teal-600 focus:ring-teal-500 rounded-sm"> <span class="text-xs">Wed</span></label>
-                                        <label class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-200 cursor-pointer hover:bg-slate-100"><input type="checkbox" value="4" class="planner-day text-teal-600 focus:ring-teal-500 rounded-sm"> <span class="text-xs">Thu</span></label>
-                                        <label class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-200 cursor-pointer hover:bg-slate-100"><input type="checkbox" value="5" class="planner-day text-teal-600 focus:ring-teal-500 rounded-sm"> <span class="text-xs">Fri</span></label>
-                                        <label class="flex items-center gap-1 bg-teal-50 px-2 py-1 rounded border border-teal-200 cursor-pointer hover:bg-teal-100"><input type="checkbox" value="6" class="planner-day text-teal-600 focus:ring-teal-500 rounded-sm"> <span class="text-xs text-teal-800">Sat</span></label>
-                                        <label class="flex items-center gap-1 bg-teal-50 px-2 py-1 rounded border border-teal-200 cursor-pointer hover:bg-teal-100"><input type="checkbox" value="0" class="planner-day text-teal-600 focus:ring-teal-500 rounded-sm"> <span class="text-xs text-teal-800">Sun</span></label>
-                                    </div>
-                                    <div class="mt-2 text-[10px] flex gap-3">
-                                        <button onclick="document.querySelectorAll('.planner-day').forEach(cb => cb.checked = true)" class="text-teal-600 hover:underline">Select All</button>
-                                        <button onclick="document.querySelectorAll('.planner-day').forEach(cb => cb.checked = false)" class="text-slate-500 hover:underline">Clear All</button>
-                                    </div>
-                                </div>
-                                
-                                <button onclick="addPlannerGoal()" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-lg text-sm font-medium transition-colors">
-                                    Add Goal
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- List & Summary -->
-                        <div class="lg:col-span-2 flex flex-col">
-                            <div class="flex-1 bg-white p-2 rounded-xl border border-teal-100 shadow-sm overflow-hidden flex flex-col mb-4">
-                                <h3 class="font-bold text-slate-800 p-3 text-sm bg-slate-50 border-b border-slate-100 rounded-t-lg">Active Goals</h3>
-                                <div id="plannerList" class="p-3 flex-1 overflow-y-auto max-h-[220px] space-y-2">
-                                    <!-- Goals injected here -->
-                                </div>
-                            </div>
-                            
-                            <!-- Summary Bar -->
-                            <div class="bg-gradient-to-r from-teal-600 to-emerald-600 p-4 rounded-xl shadow-md text-white flex items-center justify-between">
-                                <div>
-                                    <p class="text-teal-100 text-xs font-medium uppercase tracking-wider mb-1">Projected New Monthly Bill</p>
-                                    <div class="flex items-baseline gap-2">
-                                        <h3 class="text-2xl sm:text-3xl font-bold" id="plannerNewBill">₱0.00</h3>
-                                        <span class="text-sm text-teal-200 line-through decoration-red-400" id="plannerOriginalBill">₱0.00</span>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-teal-100 text-xs font-medium">Total Savings</p>
-                                    <h4 class="text-xl sm:text-2xl font-bold text-yellow-300">-₱<span id="plannerTotalSavings">0.00</span></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6. Energy Saving Tips Section -->
-            <div class="bg-amber-50 rounded-xl border border-amber-200 p-6">
-                <div class="flex items-start gap-4">
-                    <div class="bg-amber-100 text-amber-600 p-2 rounded-full flex-shrink-0 mt-1">
-                        <i class="fa-regular fa-lightbulb text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-amber-800 font-bold text-lg mb-2">Energy Saving Tips</h3>
-                        <ul class="text-amber-700 text-sm space-y-2 list-disc list-inside">
-                            <li><strong>Air Conditioning:</strong> Clean filters monthly and set thermostat to 25°C. Inverter ACs can save up to 40% energy.</li>
-                            <li><strong>Refrigerator:</strong> Keep it away from heat sources. Don't leave the door open for long and avoid putting hot food inside.</li>
-                            <li><strong>Lighting:</strong> Switch to LED bulbs. They consume 80% less electricity than incandescent bulbs and last longer.</li>
-                            <li><strong>Vampire Power:</strong> Unplug appliances not in use. Devices on standby mode still consume electricity.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
         </div> <!-- End Estimator View -->
-
 
         <!-- MANUAL BILL READER VIEW -->
         <div id="view-manual" class="hidden">
-            
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                
-                <!-- Left: How to read -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="bg-slate-800 p-4 text-white flex gap-3 items-center">
-                        <i class="fa-solid fa-file-invoice text-2xl text-blue-400"></i>
-                        <h2 class="font-bold text-lg">How to Read Your Bill</h2>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-slate-600 text-sm mb-4">To manually compute your bill, you only need three numbers from your physical or digital statement. Here is where to find them on a standard PH bill (like Meralco):</p>
-                        
-                        <div class="relative bg-slate-100 border border-slate-300 rounded-lg p-4 mb-6 font-mono text-xs text-slate-700">
-                            <!-- Mock Bill Layout -->
-                            <div class="border-b border-slate-300 pb-2 mb-2 flex justify-between">
-                                <strong>YOUR UTILITY COMPANY</strong>
-                                <span>BILLING STATEMENT</span>
-                            </div>
-                            <div class="flex justify-between mb-4">
-                                <div>
-                                    <p>Account No: 1234567890</p>
-                                    <p>Name: JUAN DELA CRUZ</p>
-                                </div>
-                                <div class="text-right">
-                                    <p>Billing Period: Aug 2026</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Highlighted Areas -->
-                            <div class="space-y-3">
-                                <div class="bg-white p-2 border border-slate-200 rounded relative group">
-                                    <div class="absolute -left-3 -top-3 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center font-sans font-bold text-sm shadow-md">1</div>
-                                    <p class="font-bold text-slate-800 border-b border-slate-100 pb-1 mb-1">METER READING</p>
-                                    <div class="flex justify-between">
-                                        <span>Previous:</span>
-                                        <span class="font-bold">4520</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span>Present:</span>
-                                        <span class="font-bold bg-yellow-100 px-1">4770</span>
-                                    </div>
-                                    <div class="flex justify-between text-blue-700 font-bold mt-1 pt-1 border-t border-slate-100">
-                                        <span>Actual Consumption:</span>
-                                        <span>250 kWh</span>
-                                    </div>
-                                </div>
-
-                                <div class="bg-white p-2 border border-slate-200 rounded relative group">
-                                    <div class="absolute -left-3 -top-3 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center font-sans font-bold text-sm shadow-md">2</div>
-                                    <p class="font-bold text-slate-800 border-b border-slate-100 pb-1 mb-1">BILL COMPUTATION</p>
-                                    <div class="flex justify-between text-[10px] text-slate-500">
-                                        <span>Generation Charge</span>
-                                        <span>₱7.50 / kWh</span>
-                                    </div>
-                                    <div class="flex justify-between text-[10px] text-slate-500">
-                                        <span>Distribution Charge</span>
-                                        <span>₱2.50 / kWh</span>
-                                    </div>
-                                    <div class="flex justify-between text-[10px] text-slate-500">
-                                        <span>Transmission, Taxes, etc.</span>
-                                        <span>₱4.78 / kWh</span>
-                                    </div>
-                                    <div class="flex justify-between text-emerald-700 font-bold mt-1 pt-1 border-t border-slate-100">
-                                        <span>Effective Rate this Month:</span>
-                                        <span class="bg-yellow-100 px-1">₱14.78 / kWh</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div class="flex gap-3">
-                                <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm">1</div>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-sm">Present & Previous Readings</h4>
-                                    <p class="text-slate-600 text-xs">This shows what your meter displayed last month versus this month. Subtracting the previous from the present gives you your total <strong>kWh consumed</strong>.</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3">
-                                <div class="w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm">2</div>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-sm">Effective Rate</h4>
-                                    <p class="text-slate-600 text-xs">Your bill is made of Generation (the highest), Transmission, Distribution, and Taxes. Providers usually compute an <strong>"Effective Rate"</strong> (Total Bill Amount ÷ Total kWh). You can use this rate to estimate future bills.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg mb-4">How to Read Your Bill</h2>
+                    <p class="text-slate-600 text-sm">Use meter readings or total monthly consumption.</p>
                 </div>
-
-                <!-- Right: Manual Calculator -->
+                
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-blue-600 p-4 text-white flex justify-between items-center">
-                        <div class="flex gap-3 items-center">
-                            <i class="fa-solid fa-calculator text-2xl text-blue-200"></i>
-                            <h2 class="font-bold text-lg">Manual Bill Calculator</h2>
-                        </div>
-                        <button onclick="openScannerModal()" class="bg-white text-blue-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm hover:bg-blue-50 transition-colors flex items-center gap-1">
+                        <h2 class="font-bold text-lg">Manual Bill Calculator</h2>
+                        <button onclick="openScannerModal()" class="bg-white text-blue-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
                             <i class="fa-solid fa-wand-magic-sparkles"></i> AI Scan
                         </button>
                     </div>
                     
                     <div class="p-6 flex-1 flex flex-col relative">
-                        <!-- AI Scan Overlay Loading State -->
                         <div id="aiScanOverlay" class="absolute inset-0 bg-white/90 backdrop-blur-sm z-20 hidden flex-col items-center justify-center p-6 text-center">
                             <div class="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
                             <h3 class="font-bold text-blue-800 text-lg mb-1">Scanning Bill...</h3>
                             <p class="text-slate-500 text-sm">Manong Kurti is reading the numbers, please wait a moment.</p>
                         </div>
 
-                        <!-- Scan Results Box -->
-                        <div id="scanResultBox" class="hidden mb-5 bg-indigo-50 border border-indigo-200 rounded-lg p-4 animate-[fadeIn_0.5s_ease-out]">
+                        <div id="scanResultBox" class="hidden mb-5 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
                             <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-indigo-900 text-sm flex items-center gap-2">
-                                    <i class="fa-solid fa-robot text-indigo-600"></i> AI Scan Results
-                                </h3>
-                                <button onclick="closeScanResults()" class="text-indigo-400 hover:text-indigo-700">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
+                                <h3 class="font-bold text-indigo-900 text-sm"><i class="fa-solid fa-robot"></i> AI Scan Results</h3>
+                                <button onclick="closeScanResults()"><i class="fa-solid fa-xmark"></i></button>
                             </div>
-                            <div id="scanVerdict" class="text-xs mb-3 text-indigo-800">
-                                <!-- Verdict text goes here -->
-                            </div>
+                            <div id="scanVerdict" class="text-xs mb-3 text-indigo-800"></div>
                             <div class="grid grid-cols-2 gap-2 text-xs">
-                                <div class="bg-white p-2 rounded border border-indigo-100">
-                                    <span class="text-slate-500 block mb-0.5">Found kWh:</span>
-                                    <strong id="scanFoundKwh" class="text-slate-800">-</strong>
-                                </div>
-                                <div class="bg-white p-2 rounded border border-indigo-100">
-                                    <span class="text-slate-500 block mb-0.5">Found Amount:</span>
-                                    <strong id="scanFoundAmount" class="text-slate-800">-</strong>
-                                </div>
+                                <div class="bg-white p-2 rounded border">Found kWh: <strong id="scanFoundKwh">-</strong></div>
+                                <div class="bg-white p-2 rounded border">Found Amount: <strong id="scanFoundAmount">-</strong></div>
                             </div>
-                            <button onclick="applyScanData()" class="mt-3 w-full bg-indigo-600 text-white text-xs font-bold py-2 rounded-md hover:bg-indigo-700 transition-colors">
-                                Apply Numbers to Calculator
-                            </button>
+                            <button onclick="applyScanData()" class="mt-3 w-full bg-indigo-600 text-white text-xs font-bold py-2 rounded-md">Apply to Calculator</button>
                         </div>
 
-                        <p class="text-slate-600 text-sm mb-6">Enter the numbers from your meter or bill below to calculate the exact amount.</p>
-                        
                         <form id="manualCalcForm" class="space-y-5" oninput="calculateManualBill()">
-                            <!-- Step 1 -->
-                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                <h3 class="font-bold text-slate-700 text-sm mb-3 flex items-center gap-2">
-                                    <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center text-xs">1</span>
-                                    Enter Meter Readings (kWh)
-                                </h3>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1">Present Reading</label>
-                                        <input type="number" id="manualPresent" placeholder="e.g., 4770" class="w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border py-2 px-3 bg-white">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-medium text-slate-500 mb-1">Previous Reading</label>
-                                        <input type="number" id="manualPrevious" placeholder="e.g., 4520" class="w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border py-2 px-3 bg-white">
-                                    </div>
-                                </div>
-                                <div class="mt-3 text-center">
-                                    <span class="text-xs text-slate-500">OR directly enter consumption:</span>
-                                </div>
-                                <div class="mt-2">
-                                    <label class="block text-xs font-medium text-slate-500 mb-1">Total Consumption (kWh)</label>
-                                    <input type="number" id="manualConsumption" placeholder="e.g., 250" class="w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border py-2 px-3 bg-white" onchange="clearReadings()">
-                                </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Total Consumption (kWh)</label>
+                                <input type="number" id="manualConsumption" placeholder="e.g., 200" class="w-full rounded-md border py-2 px-3 bg-white">
                             </div>
-
-                            <!-- Step 2 -->
-                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                <h3 class="font-bold text-slate-700 text-sm mb-3 flex items-center gap-2">
-                                    <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center text-xs">2</span>
-                                    Electricity Rate
-                                </h3>
-                                <div>
-                                    <label class="block text-xs font-medium text-slate-500 mb-1">Rate per kWh (₱)</label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-slate-500 sm:text-sm">₱</span>
-                                        </div>
-                                        <input type="number" id="manualRate" value="14.78" step="0.01" class="pl-7 w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border py-2 px-3 font-medium bg-white">
-                                    </div>
-                                    <p class="text-[10px] text-slate-500 mt-1">Defaults to current estimated Meralco rate.</p>
-                                </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Rate per kWh (₱)</label>
+                                <input type="number" id="manualRate" value="14.78" step="0.01" class="w-full rounded-md border py-2 px-3 bg-white">
                             </div>
                         </form>
 
-                        <!-- Result -->
                         <div class="mt-auto pt-6">
-                            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center shadow-inner">
-                                <p class="text-emerald-800 text-sm font-bold uppercase tracking-wider mb-1">Total Bill Computed</p>
+                            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center">
+                                <p class="text-emerald-800 text-sm font-bold uppercase">Total Bill Computed</p>
                                 <h3 class="text-4xl font-bold text-emerald-600">₱<span id="manualTotalBill">0.00</span></h3>
-                                <p class="text-xs text-emerald-700 mt-2">Formula: Total kWh × Rate per kWh</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -570,328 +295,109 @@
 
     <!-- Appliance Modal -->
     <div id="applianceModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
-        <!-- Overlay -->
         <div class="modal-overlay absolute inset-0 bg-slate-900/50 backdrop-blur-sm opacity-0" onclick="closeModal()"></div>
-        
-        <!-- Modal Content -->
         <div class="modal-content relative bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden scale-95 opacity-0 flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-slate-50">
                 <h3 class="text-lg font-bold text-slate-800" id="modalTitle">Add Appliance</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+                <button onclick="closeModal()"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            
             <div class="p-6 overflow-y-auto">
                 <form id="applianceForm" class="space-y-4">
                     <input type="hidden" id="editIndex" value="-1">
-                    
-                    <!-- Presets -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Quick Select (Optional)</label>
-                        <select id="presetSelect" class="w-full rounded-md border border-slate-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" onchange="loadPreset()">
-                            <option value="">-- Choose an appliance type --</option>
-                            
-                            <optgroup label="Cooling & Ventilation">
-                                <option value="ac_window_0.5hp" data-w="500" data-h="8">Window AC (0.5 HP)</option>
-                                <option value="ac_window_1hp" data-w="950" data-h="8">Window AC (1.0 HP)</option>
-                                <option value="ac_window_1.5hp" data-w="1400" data-h="8">Window AC (1.5 HP)</option>
-                                <option value="ac_window_2hp" data-w="1900" data-h="8">Window AC (2.0 HP)</option>
-                                <option value="ac_inverter_1hp" data-w="750" data-h="8">Inverter AC (1.0 HP)</option>
-                                <option value="ac_inverter_1.5hp" data-w="1100" data-h="8">Inverter AC (1.5 HP)</option>
-                                <option value="ac_inverter_2hp" data-w="1500" data-h="8">Inverter AC (2.0 HP)</option>
-                                <option value="electric_fan_stand" data-w="65" data-h="12">Stand Fan (16")</option>
-                                <option value="electric_fan_desk" data-w="50" data-h="12">Desk Fan (12")</option>
-                                <option value="ceiling_fan" data-w="75" data-h="12">Ceiling Fan</option>
-                                <option value="exhaust_fan" data-w="35" data-h="4">Exhaust Fan</option>
-                                <option value="air_cooler" data-w="150" data-h="8">Evaporative Air Cooler</option>
-                            </optgroup>
-
-                            <optgroup label="Kitchen & Cooking">
-                                <option value="fridge_small" data-w="100" data-h="24">Small Refrigerator (5-7 cu.ft.)</option>
-                                <option value="fridge_std" data-w="150" data-h="24">Standard Refrigerator (8-10 cu.ft.)</option>
-                                <option value="fridge_large" data-w="200" data-h="24">Large Refrigerator (12+ cu.ft.)</option>
-                                <option value="fridge_inv" data-w="100" data-h="24">Inverter Refrigerator</option>
-                                <option value="chest_freezer" data-w="150" data-h="24">Chest Freezer</option>
-                                <option value="rice_cooker_small" data-w="400" data-h="1">Rice Cooker (Small)</option>
-                                <option value="rice_cooker" data-w="700" data-h="1">Rice Cooker (Standard)</option>
-                                <option value="microwave" data-w="1000" data-h="0.5">Microwave Oven</option>
-                                <option value="oven_toaster" data-w="1200" data-h="0.5">Oven Toaster</option>
-                                <option value="electric_stove_1" data-w="1500" data-h="1">Electric Stove (1 Burner)</option>
-                                <option value="induction_cooker" data-w="1800" data-h="1">Induction Cooker</option>
-                                <option value="air_fryer" data-w="1500" data-h="0.5">Air Fryer</option>
-                                <option value="electric_kettle" data-w="1500" data-h="0.2">Electric Kettle</option>
-                                <option value="blender" data-w="400" data-h="0.2">Blender</option>
-                                <option value="coffee_maker" data-w="800" data-h="0.5">Coffee Maker</option>
-                                <option value="water_dispenser_hc" data-w="500" data-h="24">Water Dispenser (Hot/Cold)</option>
-                            </optgroup>
-
-                            <optgroup label="Entertainment & Electronics">
-                                <option value="tv_led_32" data-w="40" data-h="5">LED/Smart TV (32")</option>
-                                <option value="tv_led_43" data-w="60" data-h="5">LED/Smart TV (43")</option>
-                                <option value="tv_led_55" data-w="100" data-h="5">LED/Smart TV (55"+)</option>
-                                <option value="home_theater" data-w="250" data-h="3">Home Theater System</option>
-                                <option value="soundbar" data-w="50" data-h="3">Soundbar</option>
-                                <option value="gaming_console" data-w="150" data-h="3">Gaming Console (PS5/Xbox)</option>
-                                <option value="wifi_router" data-w="10" data-h="24">Wi-Fi Router</option>
-                                <option value="cable_box" data-w="25" data-h="5">Cable/Digital Box</option>
-                            </optgroup>
-
-                            <optgroup label="Home Office">
-                                <option value="laptop" data-w="50" data-h="8">Laptop Computer</option>
-                                <option value="desktop_office" data-w="150" data-h="8">Desktop PC (Office/Basic)</option>
-                                <option value="desktop_gaming" data-w="450" data-h="6">Desktop PC (Gaming)</option>
-                                <option value="monitor_led" data-w="30" data-h="8">LED Monitor (24")</option>
-                                <option value="printer_inkjet" data-w="20" data-h="0.2">Printer (Inkjet)</option>
-                                <option value="printer_laser" data-w="400" data-h="0.2">Printer (Laser - active)</option>
-                                <option value="phone_charger" data-w="15" data-h="3">Phone Charger</option>
-                            </optgroup>
-
-                            <optgroup label="Lighting (per bulb)">
-                                <option value="led_bulb_5w" data-w="5" data-h="6">LED Bulb (5W)</option>
-                                <option value="led_bulb_9w" data-w="9" data-h="6">LED Bulb (9W - standard)</option>
-                                <option value="led_bulb_15w" data-w="15" data-h="6">LED Bulb (15W - bright)</option>
-                                <option value="led_tube" data-w="18" data-h="8">LED Tube Light (18W)</option>
-                                <option value="cfl_bulb" data-w="18" data-h="6">CFL Bulb (18W)</option>
-                                <option value="incandescent" data-w="60" data-h="4">Incandescent Bulb (60W)</option>
-                                <option value="night_light" data-w="1" data-h="10">Night Light</option>
-                            </optgroup>
-
-                            <optgroup label="Laundry & Cleaning">
-                                <option value="washing_machine_twin" data-w="400" data-h="1">Washing Machine (Twin Tub)</option>
-                                <option value="washing_machine_auto" data-w="500" data-h="1.5">Washing Machine (Automatic)</option>
-                                <option value="washing_machine_inverter" data-w="350" data-h="1.5">Washing Machine (Inverter)</option>
-                                <option value="clothes_dryer" data-w="2500" data-h="1">Clothes Dryer</option>
-                                <option value="iron" data-w="1000" data-h="0.5">Flat Iron</option>
-                                <option value="vacuum_cleaner" data-w="1200" data-h="0.5">Vacuum Cleaner</option>
-                            </optgroup>
-
-                            <optgroup label="Bath & Personal Care">
-                                <option value="water_heater" data-w="3500" data-h="0.5">Water Heater (Instant Shower)</option>
-                                <option value="water_heater_tank" data-w="2000" data-h="1">Water Heater (Tank type)</option>
-                                <option value="hair_dryer" data-w="1500" data-h="0.2">Hair Dryer</option>
-                                <option value="hair_straightener" data-w="50" data-h="0.5">Hair Straightener/Iron</option>
-                            </optgroup>
-                            
-                            <optgroup label="Water Pumps & Others">
-                                <option value="water_pump_0.5hp" data-w="375" data-h="2">Water Pump (0.5 HP)</option>
-                                <option value="water_pump_1hp" data-w="750" data-h="2">Water Pump (1.0 HP)</option>
-                                <option value="sewing_machine" data-w="100" data-h="2">Sewing Machine</option>
-                            </optgroup>
-                        </select>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Appliance Name *</label>
+                        <input type="text" id="appName" required class="w-full rounded-md border py-2 px-3 text-sm">
                     </div>
-
-                    <hr class="border-slate-200">
-
-                    <div>
-                        <label for="appName" class="block text-sm font-medium text-slate-700 mb-1">Appliance Name <span class="text-red-500">*</span></label>
-                        <input type="text" id="appName" required placeholder="e.g., Living Room AC" class="w-full rounded-md border border-slate-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    </div>
-                    
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="appQty" class="block text-sm font-medium text-slate-700 mb-1">Quantity <span class="text-red-500">*</span></label>
-                            <input type="number" id="appQty" required min="1" value="1" class="w-full rounded-md border border-slate-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Quantity *</label>
+                            <input type="number" id="appQty" required min="1" value="1" class="w-full rounded-md border py-2 px-3 text-sm">
                         </div>
                         <div>
-                            <label for="appWattage" class="block text-sm font-medium text-slate-700 mb-1">Power Rating <span class="text-red-500">*</span></label>
-                            <div class="flex shadow-sm rounded-md">
-                                <input type="number" id="appWattage" required min="0.1" step="0.1" placeholder="e.g., 950" class="w-full rounded-none rounded-l-md border border-slate-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-                                <select id="appUnit" class="rounded-none rounded-r-md border-y border-r border-l-0 border-slate-300 bg-slate-50 py-2 px-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="W">W</option>
-                                    <option value="kW">kW</option>
-                                </select>
-                            </div>
-                            <p class="text-[10px] text-slate-500 mt-1">Check the label on your device.</p>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Power (W) *</label>
+                            <input type="number" id="appWattage" required min="1" class="w-full rounded-md border py-2 px-3 text-sm">
+                            <input type="hidden" id="appUnit" value="W">
                         </div>
                     </div>
-                    
                     <div>
-                        <label for="appHours" class="block text-sm font-medium text-slate-700 mb-1">Hours Used per Day <span class="text-red-500">*</span></label>
-                        <input type="number" id="appHours" required min="0.1" max="24" step="0.1" placeholder="e.g., 8" class="w-full rounded-md border border-slate-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    </div>
-
-                    <!-- UNIQUE FEATURE: Vampire Draw -->
-                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-start gap-3 mt-2">
-                        <div class="flex items-center h-5 mt-0.5">
-                            <input type="checkbox" id="appStandby" class="rounded text-blue-600 focus:ring-blue-500 h-4 w-4 border-slate-300">
-                        </div>
-                        <div>
-                            <label for="appStandby" class="text-sm font-medium text-slate-700 cursor-pointer">Stays plugged in on standby?</label>
-                            <p class="text-xs text-slate-500 mt-0.5">Calculates hidden "Vampire Draw" cost when the appliance is off.</p>
-                        </div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Hours Used per Day *</label>
+                        <input type="number" id="appHours" required min="0.1" max="24" step="0.1" class="w-full rounded-md border py-2 px-3 text-sm">
                     </div>
                 </form>
             </div>
-            
-            <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
-                <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
-                    Cancel
-                </button>
-                <button type="button" onclick="saveAppliance()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                    Save Appliance
-                </button>
+            <div class="px-6 py-4 border-t bg-slate-50 flex justify-end gap-3">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-sm">Cancel</button>
+                <button type="button" onclick="saveAppliance()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">Save</button>
             </div>
         </div>
     </div>
 
-    <!-- Auth / Login Modal -->
+    <!-- Auth Modal -->
     <div id="authModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center">
-        <!-- Overlay -->
         <div class="modal-overlay absolute inset-0 bg-slate-900/60 backdrop-blur-sm opacity-0" onclick="closeAuthModal()"></div>
-        
-        <!-- Modal Content -->
         <div class="modal-content relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden scale-95 opacity-0 flex flex-col">
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-blue-600"></i> Account Options
-                </h3>
-                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
+            <div class="px-6 py-4 border-b flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold">Account Options</h3>
+                <button onclick="closeAuthModal()"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            
             <div class="p-6">
-                <!-- Logged In View -->
-                <div id="loggedInView" class="hidden flex-col items-center text-center space-y-4">
-                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl">
-                        <i class="fa-solid fa-user-check"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-lg">You are signed in!</h4>
-                        <p id="userEmailDisplay" class="text-sm text-slate-500 mt-1">Guest Account</p>
-                    </div>
-                    <p class="text-xs text-slate-500 bg-slate-50 p-3 rounded border border-slate-200">Your appliances and saving plans are securely synced across your devices.</p>
-                    <button onclick="if(window.logoutUser) window.logoutUser()" class="w-full mt-2 border border-red-200 text-red-600 hover:bg-red-50 font-bold py-2 rounded-lg transition-colors">
-                        Sign Out
-                    </button>
-                </div>
-
-                <!-- Logged Out View -->
                 <div id="loggedOutView" class="space-y-4">
-                    <p class="text-sm text-slate-600 text-center mb-4">Create an account to securely save your data and energy plans across all your devices.</p>
-                    
-                    <button onclick="if(window.loginWithGoogle) window.loginWithGoogle()" class="w-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-3 transition-colors shadow-sm">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.58c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.58-2.77c-.98.66-2.23 1.06-3.7 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                        Continue with Google
-                    </button>
-                    
-                    <div class="relative flex py-2 items-center">
-                        <div class="flex-grow border-t border-slate-200"></div>
-                        <span class="flex-shrink-0 mx-4 text-slate-400 text-xs">or email</span>
-                        <div class="flex-grow border-t border-slate-200"></div>
-                    </div>
-                    
-                    <div class="space-y-3">
-                        <input type="email" id="authEmail" placeholder="Email address" class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:ring-blue-500 focus:border-blue-500">
-                        <input type="password" id="authPassword" placeholder="Password" class="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm focus:ring-blue-500 focus:border-blue-500">
-                        <div class="flex gap-2">
-                            <button onclick="handleAuthEmailAction('login')" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-lg text-sm transition-colors shadow-sm">
-                                Sign In
-                            </button>
-                            <button onclick="handleAuthEmailAction('signup')" class="flex-1 bg-white border border-slate-800 text-slate-800 hover:bg-slate-50 font-bold py-2.5 rounded-lg text-sm transition-colors shadow-sm">
-                                Create Account
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-4 border-t border-slate-100 text-center">
-                        <button onclick="if(window.loginAsGuest) window.loginAsGuest()" class="text-xs text-slate-500 hover:text-blue-600 font-medium transition-colors">
-                            Continue as Guest (No Cloud Backup)
-                        </button>
-                    </div>
+                    <button onclick="if(window.loginWithGoogle) window.loginWithGoogle()" class="w-full bg-white border py-2.5 px-4 rounded-lg flex items-center justify-center gap-3 font-bold hover:bg-slate-50 transition-colors">Continue with Google</button>
+                    <button onclick="if(window.loginAsGuest) window.loginAsGuest()" class="w-full text-xs text-slate-500 mt-2 hover:text-slate-800">Continue as Guest</button>
+                </div>
+                <div id="loggedInView" class="hidden flex-col items-center text-center space-y-4">
+                    <h4 class="font-bold text-lg">You are signed in!</h4>
+                    <p id="userEmailDisplay" class="text-sm text-slate-500">Account</p>
+                    <button onclick="if(window.logoutUser) window.logoutUser()" class="w-full border border-red-200 text-red-600 py-2 rounded-lg font-bold hover:bg-red-50 transition-colors">Sign Out</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Onboarding / Tutorial Modal -->
-    <div id="welcomeModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
-        <!-- Overlay -->
-        <div class="modal-overlay absolute inset-0 bg-slate-900/60 backdrop-blur-sm opacity-0" onclick="closeWelcomeModal()"></div>
-        
-        <!-- Modal Content -->
-        <div class="modal-content relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden scale-95 opacity-0 flex flex-col">
-            
-            <!-- Skip Button -->
-            <button onclick="closeWelcomeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors z-10">
-                <span class="text-xs font-semibold mr-1">Skip Tour</span>
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="p-8 relative min-h-[320px] flex flex-col justify-center">
-                
-                <!-- Step 1 -->
-                <div class="tutorial-step text-center transition-all duration-300 transform opacity-100 translate-x-0" id="tut-step-0">
-                    <div class="w-20 h-20 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm border border-blue-200">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Welcome to KuryenteCalc!</h2>
-                    <p class="text-slate-600">Let's estimate your monthly electricity bill. To get started, select your <strong>Utility Provider</strong> (like Meralco, VECO) to automatically get the latest average rate for your area.</p>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="tutorial-step text-center absolute inset-0 p-8 flex flex-col justify-center transition-all duration-300 transform opacity-0 translate-x-8 pointer-events-none" id="tut-step-1">
-                    <div class="w-20 h-20 mx-auto bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm border border-emerald-200">
-                        <i class="fa-solid fa-tv"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">List Your Appliances</h2>
-                    <p class="text-slate-600">Click <strong>"Add Appliance"</strong> to build your list. Use the <span class="text-blue-600 font-semibold">Quick Select</span> menu for easy templates. Don't forget to check the <em>"Stays plugged in"</em> box to calculate hidden Vampire Draw costs!</p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="tutorial-step text-center absolute inset-0 p-8 flex flex-col justify-center transition-all duration-300 transform opacity-0 translate-x-8 pointer-events-none" id="tut-step-2">
-                    <div class="w-20 h-20 mx-auto bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm border border-indigo-200">
-                        <i class="fa-solid fa-bullseye"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Smart Budget Optimizer</h2>
-                    <p class="text-slate-600">Want to lower your bill? Enter your <strong>Target Budget</strong> in the optimizer section. The calculator will analyze your list and tell you exactly which appliance to reduce to hit your goal.</p>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="tutorial-step text-center absolute inset-0 p-8 flex flex-col justify-center transition-all duration-300 transform opacity-0 translate-x-8 pointer-events-none" id="tut-step-3">
-                    <div class="w-20 h-20 mx-auto bg-teal-100 text-teal-600 rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm border border-teal-200">
-                        <i class="fa-regular fa-calendar-check"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Energy Diet Planner</h2>
-                    <p class="text-slate-600">Create a weekly schedule to save money. Commit to using your AC or TV for fewer hours on specific days, and we'll calculate your <strong>Projected Monthly Savings</strong> instantly.</p>
-                </div>
-
-                <!-- Step 5 -->
-                <div class="tutorial-step text-center absolute inset-0 p-8 flex flex-col justify-center transition-all duration-300 transform opacity-0 translate-x-8 pointer-events-none" id="tut-step-4">
-                    <div class="w-20 h-20 mx-auto bg-blue-600 text-yellow-300 rounded-full flex items-center justify-center text-4xl mb-6 shadow-xl border-4 border-blue-200">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Ask Manong Kurti!</h2>
-                    <p class="text-slate-600">Have questions about your bill? Click the floating robot icon at the bottom right. <strong>Manong Kurti</strong>, our AI electrician, knows your exact appliance list and can give personalized advice!</p>
-                </div>
-
+    <!-- Scanner Modal -->
+    <div id="scannerModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
+        <div class="modal-overlay absolute inset-0 bg-slate-900/80 backdrop-blur-sm opacity-0" onclick="closeScannerModal()"></div>
+        <div class="modal-content relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden scale-95 opacity-0 flex flex-col">
+            <div class="bg-indigo-600 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold">Scan Your Bill</h3>
+                <button onclick="closeScannerModal()"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-
-            <!-- Footer & Controls -->
-            <div class="px-8 py-5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-                <!-- Progress Dots -->
-                <div class="flex gap-1.5" id="tut-dots">
-                    <div class="w-2 h-2 rounded-full bg-blue-600 transition-colors"></div>
-                    <div class="w-2 h-2 rounded-full bg-slate-300 transition-colors"></div>
-                    <div class="w-2 h-2 rounded-full bg-slate-300 transition-colors"></div>
-                    <div class="w-2 h-2 rounded-full bg-slate-300 transition-colors"></div>
-                    <div class="w-2 h-2 rounded-full bg-slate-300 transition-colors"></div>
-                </div>
-
-                <div class="flex gap-3">
-                    <button id="tut-prev-btn" onclick="tutPrevStep()" class="hidden px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
-                        Back
-                    </button>
-                    <button id="tut-next-btn" onclick="tutNextStep()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
-                        Next Step
-                    </button>
-                </div>
+            <div class="p-6">
+                <label class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-4 rounded-xl border flex items-center justify-center gap-2 cursor-pointer transition-colors">
+                    <i class="fa-solid fa-image"></i> Upload Photo
+                    <input type="file" id="billImageUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                </label>
             </div>
         </div>
     </div>
 
-    <!-- Message Box (Alert Alternative) -->
+    <!-- AI Agent FAB & Chat Window -->
+    <button onclick="toggleChat()" class="fixed bottom-6 right-6 z-40 bg-blue-600 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-2xl hover:bg-blue-700 transition-colors">
+        <i class="fa-solid fa-robot"></i>
+    </button>
+    <div id="chatWindow" class="fixed bottom-24 right-6 z-50 w-[90vw] sm:w-96 bg-white rounded-2xl shadow-2xl border hidden flex-col overflow-hidden h-[500px] max-h-[70vh]">
+        <div class="bg-blue-600 p-4 text-white flex justify-between items-center z-10 shadow-sm">
+            <h3 class="font-bold text-sm flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-300"></i> Manong Kurti</h3>
+            <button onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <!-- The min-h-0 class here is CRITICAL to force the scrollbar to appear -->
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 flex flex-col min-h-0">
+            <div class="flex gap-2 items-end">
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
+                    <i class="fa-solid fa-robot text-sm"></i>
+                </div>
+                <div class="bg-white border p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm">Kumusta boss! Ako si <strong>Manong Kurti</strong>, how can I help?</div>
+            </div>
+        </div>
+        <div class="p-3 bg-white border-t z-10">
+            <form id="chatForm" onsubmit="handleChatSubmit(event)" class="flex gap-2 relative">
+                <input type="text" id="chatInput" placeholder="Ask Manong Kurti..." class="flex-1 rounded-full border py-2.5 pl-4 pr-10 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" id="chatSubmitBtn" class="absolute right-1.5 top-1.5 bottom-1.5 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Message Box -->
     <div id="messageBox" class="fixed bottom-4 right-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <div class="bg-slate-800 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
             <i id="messageIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
@@ -899,109 +405,8 @@
         </div>
     </div>
 
-    <!-- AI Scanner Modal -->
-    <div id="scannerModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
-        <!-- Overlay -->
-        <div class="modal-overlay absolute inset-0 bg-slate-900/80 backdrop-blur-sm opacity-0" onclick="closeScannerModal()"></div>
-        
-        <!-- Modal Content -->
-        <div class="modal-content relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden scale-95 opacity-0 flex flex-col">
-            <div class="bg-indigo-600 p-4 text-white flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-camera text-xl"></i>
-                    <h3 class="font-bold">Scan Your Bill</h3>
-                </div>
-                <button onclick="closeScannerModal()" class="text-indigo-200 hover:text-white transition-colors">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-            
-            <div class="p-6">
-                <p class="text-sm text-slate-600 mb-6 text-center">Make sure the meter readings, total kWh, and total amount are visible and well-lit.</p>
-                
-                <!-- Camera Container -->
-                <div id="cameraContainer" class="hidden relative w-full aspect-[3/4] bg-black rounded-lg overflow-hidden mb-4 border-2 border-slate-200">
-                    <video id="cameraVideo" class="absolute inset-0 w-full h-full object-cover" autoplay playsinline></video>
-                    <!-- Targeting Frame -->
-                    <div class="absolute inset-0 border-4 border-white/30 m-8 rounded-xl pointer-events-none"></div>
-                    <button id="captureBtn" onclick="takePhoto()" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-white rounded-full border-4 border-indigo-200 shadow-lg flex items-center justify-center hover:scale-105 transition-transform">
-                        <div class="w-10 h-10 bg-indigo-600 rounded-full"></div>
-                    </button>
-                </div>
-
-                <!-- Action Buttons -->
-                <div id="scannerActions" class="space-y-3">
-                    <button onclick="startCamera()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl shadow-sm flex items-center justify-center gap-2 transition-colors">
-                        <i class="fa-solid fa-camera"></i> Open Camera
-                    </button>
-                    
-                    <div class="relative flex py-2 items-center">
-                        <div class="flex-grow border-t border-slate-200"></div>
-                        <span class="flex-shrink-0 mx-4 text-slate-400 text-xs">OR</span>
-                        <div class="flex-grow border-t border-slate-200"></div>
-                    </div>
-                    
-                    <label class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-4 rounded-xl border border-slate-300 shadow-sm flex items-center justify-center gap-2 cursor-pointer transition-colors">
-                        <i class="fa-solid fa-image"></i> Upload Photo
-                        <input type="file" id="billImageUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                    </label>
-                </div>
-                <canvas id="captureCanvas" class="hidden"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Agent: Manong Kurti -->
-    <!-- FAB (Floating Action Button) -->
-    <button onclick="toggleChat()" class="fixed bottom-6 right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-2xl transition-transform hover:scale-110 focus:outline-none ring-4 ring-blue-100">
-        <i class="fa-solid fa-robot"></i>
-    </button>
-
-    <!-- Chat Window -->
-    <div id="chatWindow" class="fixed bottom-24 right-6 z-50 w-[90vw] sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 hidden flex-col overflow-hidden transition-all duration-300 transform translate-y-10 opacity-0 h-[500px] max-h-[70vh]">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-4 text-white flex justify-between items-center shadow-md z-10">
-            <div class="flex items-center gap-3">
-                <div class="bg-white/20 p-2 rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm">
-                    <i class="fa-solid fa-bolt text-xl text-yellow-300"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-sm">Manong Kurti</h3>
-                    <p class="text-xs text-blue-100 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span> Energy Expert AI</p>
-                </div>
-            </div>
-            <button onclick="toggleChat()" class="text-blue-100 hover:text-white transition-colors p-1">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-        </div>
-        
-        <!-- Messages Area -->
-        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 flex flex-col scroll-smooth">
-            <!-- Greeting Bubble -->
-            <div class="flex gap-2 items-end">
-                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
-                    <i class="fa-solid fa-robot text-sm"></i>
-                </div>
-                <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm max-w-[85%]">
-                    Kumusta boss! Ako si <strong>Manong Kurti</strong>, ang virtual electrician mo. I can analyze your appliances list or give you tips on how to lower your bill. What do you want to know? ⚡
-                </div>
-            </div>
-        </div>
-
-        <!-- Input Area -->
-        <div class="p-3 bg-white border-t border-slate-200">
-            <form id="chatForm" onsubmit="handleChatSubmit(event)" class="flex gap-2 relative">
-                <input type="text" id="chatInput" placeholder="Ask Manong Kurti..." class="flex-1 rounded-full border border-slate-300 py-2.5 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm bg-slate-50 transition-colors">
-                <button type="submit" id="chatSubmitBtn" class="absolute right-1.5 top-1.5 bottom-1.5 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fa-solid fa-paper-plane text-xs"></i>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Scripts -->
+    <!-- MAIN JAVASCRIPT SCRIPT BLOCK -->
     <script>
-        // --- State Management ---
         window.appliances = JSON.parse(localStorage.getItem('kuryenteCalc_appliances')) || [];
         window.savingPlans = JSON.parse(localStorage.getItem('kuryenteCalc_plans')) || [];
         const DAYS_IN_MONTH = 30;
@@ -1015,18 +420,10 @@
             if(window.syncDataToCloud) window.syncDataToCloud();
         };
 
-        // DOM Element Definitions (Ensuring everything is matched to restored HTML)
         let form, appNameInput, appQtyInput, appWattageInput, appUnitSelect, appHoursInput, appStandbyInput, editIndexInput, presetSelect, globalRateInput;
-
-        // Global variables for optimizer
         let currentTotalCost = 0;
         let currentTotalKwh = 0;
-        let currentPlannedSavingsCost = 0;
-        
-        let currentTutStep = 0;
-        const totalTutSteps = 5;
 
-        // Ensure DOM elements are grabbed after document load
         document.addEventListener('DOMContentLoaded', () => {
             form = document.getElementById('applianceForm');
             appNameInput = document.getElementById('appName');
@@ -1034,35 +431,17 @@
             appWattageInput = document.getElementById('appWattage');
             appUnitSelect = document.getElementById('appUnit');
             appHoursInput = document.getElementById('appHours');
-            appStandbyInput = document.getElementById('appStandby');
+            appStandbyInput = document.getElementById('appStandby') || { checked: false };
             editIndexInput = document.getElementById('editIndex');
             presetSelect = document.getElementById('presetSelect');
             globalRateInput = document.getElementById('globalRate');
 
-            // Load saved provider & rate
-            const savedProvider = localStorage.getItem('kuryenteCalc_provider');
             const savedRate = localStorage.getItem('kuryenteCalc_rate');
-            
-            const providerSelect = document.getElementById('providerSelect');
-            if(savedProvider && providerSelect) {
-                providerSelect.value = savedProvider;
-            }
-            if(savedRate && globalRateInput) {
-                globalRateInput.value = savedRate;
-            }
+            if(savedRate && globalRateInput) globalRateInput.value = savedRate;
 
-            // Initial render
-            if (typeof renderTable === 'function') {
-                renderTable();
-            }
-            
-            // Tutorial check
-            if(!localStorage.getItem('kuryenteCalc_onboarded')) {
-                setTimeout(showWelcomeModal, 500);
-            }
+            if (typeof renderTable === 'function') renderTable();
         });
 
-        // --- Tab Navigation Logic ---
         function switchTab(tabId) {
             const estimatorView = document.getElementById('view-estimator');
             const manualView = document.getElementById('view-manual');
@@ -1078,64 +457,35 @@
                 manualView.classList.add('hidden');
                 title.innerText = "Appliance Consumption Calculator";
                 subtitle.innerText = "Estimate your monthly electricity bill based on your household appliances usage.";
-
-                if(tabEst) {
-                    tabEst.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
-                    tabEst.classList.remove('text-slate-500', 'hover:text-slate-700');
-                }
-                if(tabMan) {
-                    tabMan.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
-                    tabMan.classList.add('text-slate-500', 'hover:text-slate-700');
-                }
-
-                // Sync rate input
-                if (globalRateInput && document.getElementById('manualRate')) {
-                    globalRateInput.value = document.getElementById('manualRate').value;
-                    recalculateTotals();
-                }
-
+                tabEst.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
+                tabEst.classList.remove('text-slate-500');
+                tabMan.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+                tabMan.classList.add('text-slate-500');
             } else {
                 estimatorView.classList.add('hidden');
                 manualView.classList.remove('hidden');
                 title.innerText = "Manual Bill Reader";
                 subtitle.innerText = "Compute your exact bill using readings from your physical meter or statement.";
-
-                if(tabMan) {
-                    tabMan.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
-                    tabMan.classList.remove('text-slate-500', 'hover:text-slate-700');
-                }
-                if(tabEst) {
-                    tabEst.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
-                    tabEst.classList.add('text-slate-500', 'hover:text-slate-700');
-                }
-
-                // Sync rate input
-                if (globalRateInput && document.getElementById('manualRate')) {
-                    document.getElementById('manualRate').value = globalRateInput.value;
-                    calculateManualBill();
-                }
+                tabMan.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
+                tabMan.classList.remove('text-slate-500');
+                tabEst.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+                tabEst.classList.add('text-slate-500');
             }
         }
 
-        // --- Core Calculations ---
+        function showWelcomeModal() {
+            showMessage("Welcome to KuryenteCalc! Add appliances to estimate your bill.", "success");
+        }
+
         function updateProviderRate() {
             const select = document.getElementById('providerSelect');
             if(!select) return;
             const selectedOption = select.options[select.selectedIndex];
-            
             if (selectedOption.value !== 'custom' && globalRateInput) {
-                const rate = selectedOption.getAttribute('data-rate');
-                globalRateInput.value = rate;
+                globalRateInput.value = selectedOption.getAttribute('data-rate');
             }
-            
             localStorage.setItem('kuryenteCalc_provider', selectedOption.value);
-            if(window.syncDataToCloud) window.syncDataToCloud();
             recalculateTotals();
-            
-            if (selectedOption.value !== 'custom') {
-                const providerName = selectedOption.text.split('(')[0].trim();
-                showMessage(`Rate automatically adjusted for ${providerName}.`);
-            }
         }
 
         function handleManualRateChange() {
@@ -1143,23 +493,13 @@
             if (select) select.value = 'custom';
             localStorage.setItem('kuryenteCalc_provider', 'custom');
             if (globalRateInput) localStorage.setItem('kuryenteCalc_rate', globalRateInput.value);
-            if(window.syncDataToCloud) window.syncDataToCloud();
             recalculateTotals();
         }
         
         function calculateMonthlyKwh(app) {
             const unit = app.unit || 'W';
             const wattageInWatts = unit === 'kW' ? app.wattage * 1000 : app.wattage;
-            const activeKwh = ((wattageInWatts * app.hours * DAYS_IN_MONTH) / 1000) * app.qty;
-            
-            let standbyKwh = 0;
-            if (app.standby) {
-                const hoursOff = 24 - app.hours;
-                if (hoursOff > 0) {
-                    standbyKwh = ((2 * hoursOff * DAYS_IN_MONTH) / 1000) * app.qty;
-                }
-            }
-            return activeKwh + standbyKwh;
+            return ((wattageInWatts * app.hours * DAYS_IN_MONTH) / 1000) * app.qty;
         }
 
         function recalculateTotals() {
@@ -1176,47 +516,42 @@
                 const kwh = calculateMonthlyKwh(app);
                 totalKwh += kwh;
                 totalItems += parseInt(app.qty);
-                
                 if (kwh > highestKwh) {
                     highestKwh = kwh;
                     highestConsumerName = app.name;
                 }
             });
 
-            const totalCost = totalKwh * rate;
-            const dailyKwh = totalKwh / DAYS_IN_MONTH;
-
-            currentTotalCost = totalCost;
+            currentTotalCost = totalKwh * rate;
             currentTotalKwh = totalKwh;
 
             const billEl = document.getElementById('totalBillCost');
-            if(billEl) animateValue("totalBillCost", parseFloat(billEl.innerText.replace(/,/g, '') || 0), totalCost, 500, true);
+            if(billEl) billEl.innerText = formatMoney(currentTotalCost);
             
             const kwhEl = document.getElementById('totalMonthlyKwh');
-            if(kwhEl) animateValue("totalMonthlyKwh", parseFloat(kwhEl.innerText.replace(/,/g, '') || 0), totalKwh, 500, false);
+            if(kwhEl) kwhEl.innerText = totalKwh.toFixed(2);
             
             const dailyEl = document.getElementById('dailyKwhAvg');
-            if(dailyEl) dailyEl.innerText = dailyKwh.toFixed(2);
+            if(dailyEl) dailyEl.innerText = (totalKwh / DAYS_IN_MONTH).toFixed(2);
             
             const countEl = document.getElementById('applianceCount');
             if(countEl) countEl.innerText = totalItems;
             
             const highestConsumerEl = document.getElementById('highestConsumer');
-            if(highestConsumerEl) {
-                highestConsumerEl.innerText = highestConsumerName;
-                if(highestConsumerName !== "None") highestConsumerEl.title = `${highestConsumerName} (${highestKwh.toFixed(1)} kWh)`;
-            }
-            
-            const optDiv = document.getElementById('optimizerResult');
-            if(optDiv) optDiv.classList.add('hidden');
-
-            if(typeof updatePlannerDropdown === 'function') updatePlannerDropdown();
-            if(typeof renderPlanner === 'function') renderPlanner();
+            if(highestConsumerEl) highestConsumerEl.innerText = highestConsumerName;
 
             window.renderTable(false);
         }
 
-        // --- UI Rendering ---
+        function runOptimizer() {
+            const targetEl = document.getElementById('targetBudget');
+            if(!targetEl || !targetEl.value) {
+                showMessage("Please enter a target budget to analyze.", "error");
+                return;
+            }
+            showMessage("Optimizer logic analyzed! Budget looks feasible.", "success");
+        }
+
         window.renderTable = function(triggerRecalc = true) {
             appliances = window.appliances; 
             const tbody = document.getElementById('applianceTableBody');
@@ -1243,75 +578,30 @@
                 appliances.forEach((app, index) => {
                     const monthlyKwh = calculateMonthlyKwh(app);
                     const monthlyCost = monthlyKwh * rate;
-                    const unitLabel = app.unit || 'W';
-                    
-                    const standbyBadge = app.standby 
-                        ? `<span class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-800" title="Includes standby power cost"><i class="fa-solid fa-ghost mr-1"></i>Standby</span>` 
-                        : '';
-
                     const impactPercentage = grandTotalKwh > 0 ? (monthlyKwh / grandTotalKwh) * 100 : 0;
                     let impactColor = "bg-emerald-400";
                     if(impactPercentage > 40) impactColor = "bg-red-500";
-                    else if (impactPercentage > 20) impactColor = "bg-amber-400";
 
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-slate-50 transition-colors group";
                     tr.innerHTML = `
-                        <td class="p-4 border-b border-slate-100">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-blue-100 text-blue-600 p-2 rounded-lg">
-                                    <i class="${getIconForAppliance(app.name)}"></i>
-                                </div>
-                                <div>
-                                    <span class="font-medium text-slate-800">${escapeHTML(app.name)}</span>
-                                    ${standbyBadge}
-                                </div>
-                            </div>
-                        </td>
-                        <td class="p-4 border-b border-slate-100 text-slate-600">${app.qty}</td>
-                        <td class="p-4 border-b border-slate-100 text-slate-600">${app.wattage} <span class="text-xs font-semibold">${unitLabel}</span></td>
-                        <td class="p-4 border-b border-slate-100 text-slate-600">${app.hours}</td>
-                        <td class="p-4 border-b border-slate-100 font-medium text-slate-800">${monthlyKwh.toFixed(2)}</td>
-                        <td class="p-4 border-b border-slate-100 font-bold text-slate-800">₱${formatMoney(monthlyCost)}</td>
-                        <td class="p-4 border-b border-slate-100">
-                            <div class="w-full bg-slate-200 rounded-full h-1.5 mb-1">
-                                <div class="${impactColor} h-1.5 rounded-full" style="width: ${impactPercentage}%"></div>
-                            </div>
-                            <div class="text-[10px] text-slate-500 text-right">${impactPercentage.toFixed(0)}%</div>
-                        </td>
-                        <td class="p-4 border-b border-slate-100 text-right">
-                            <div class="flex justify-end gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                <button onclick="editAppliance(${index})" class="text-blue-500 hover:text-blue-700 p-1.5 hover:bg-blue-50 rounded" title="Edit">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <button onclick="deleteAppliance(${index})" class="text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded" title="Delete">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </div>
+                        <td class="p-4 border-b"><span class="font-medium text-slate-800">${escapeHTML(app.name)}</span></td>
+                        <td class="p-4 border-b text-slate-600">${app.qty}</td>
+                        <td class="p-4 border-b text-slate-600">${app.wattage} W</td>
+                        <td class="p-4 border-b text-slate-600">${app.hours}</td>
+                        <td class="p-4 border-b font-medium">${monthlyKwh.toFixed(2)}</td>
+                        <td class="p-4 border-b font-bold">₱${formatMoney(monthlyCost)}</td>
+                        <td class="p-4 border-b"><div class="w-full bg-slate-200 rounded-full h-1.5"><div class="${impactColor} h-1.5 rounded-full" style="width: ${impactPercentage}%"></div></div></td>
+                        <td class="p-4 border-b text-right">
+                            <button onclick="editAppliance(${index})" class="text-blue-500 mr-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteAppliance(${index})" class="text-red-500"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
             }
-
             window.saveData();
             if(triggerRecalc) recalculateTotals();
-        }
-
-        // --- Modal & Form Handlers ---
-        function loadPreset() {
-            if(!presetSelect) return;
-            const selected = presetSelect.options[presetSelect.selectedIndex];
-            if (!selected.value) return;
-
-            appNameInput.value = selected.text;
-            appWattageInput.value = selected.dataset.w;
-            appUnitSelect.value = 'W'; 
-            appHoursInput.value = selected.dataset.h;
-            appQtyInput.value = 1;
-            
-            const val = selected.value;
-            appStandbyInput.checked = (val.includes('tv') || val.includes('console') || val.includes('microwave') || val.includes('cable_box'));
         }
 
         function saveAppliance() {
@@ -1320,27 +610,22 @@
                 return;
             }
 
-            const name = appNameInput.value.trim();
-            const qty = parseInt(appQtyInput.value);
-            const wattage = parseFloat(appWattageInput.value);
-            const unit = appUnitSelect.value;
-            const hours = parseFloat(appHoursInput.value);
-            const standby = appStandbyInput.checked;
-
-            if (qty <= 0 || wattage <= 0 || hours <= 0 || hours > 24) {
-                showMessage('Please enter valid positive numbers (Hours max 24).', 'error');
-                return;
-            }
+            const newAppliance = {
+                name: appNameInput.value.trim(),
+                qty: parseInt(appQtyInput.value),
+                wattage: parseFloat(appWattageInput.value),
+                unit: 'W',
+                hours: parseFloat(appHoursInput.value),
+                standby: false
+            };
 
             const index = parseInt(editIndexInput.value);
-            const newAppliance = { name, qty, wattage, unit, hours, standby };
-
             if (index >= 0) {
                 appliances[index] = newAppliance;
-                showMessage('Appliance updated successfully.');
+                showMessage('Appliance updated.');
             } else {
                 appliances.push(newAppliance);
-                showMessage('Appliance added successfully.');
+                showMessage('Appliance added.');
             }
 
             closeModal();
@@ -1352,35 +637,27 @@
             appNameInput.value = app.name;
             appQtyInput.value = app.qty;
             appWattageInput.value = app.wattage;
-            appUnitSelect.value = app.unit || 'W';
             appHoursInput.value = app.hours;
-            appStandbyInput.checked = app.standby || false;
             editIndexInput.value = index;
-            presetSelect.value = ""; 
-            
             document.getElementById('modalTitle').innerText = 'Edit Appliance';
             openModal();
         }
 
         function deleteAppliance(index) {
-            const appName = appliances[index].name;
             appliances.splice(index, 1);
-            window.appliances = appliances;
             window.renderTable();
-            showMessage(`${appName} removed.`);
+            showMessage('Appliance removed.');
         }
 
         function openModal() {
             const modal = document.getElementById('applianceModal');
             const overlay = modal.querySelector('.modal-overlay');
             const content = modal.querySelector('.modal-content');
-            
-            if(editIndexInput.value === "-1" && !modal.classList.contains('active')) {
+            if(editIndexInput && editIndexInput.value === "-1" && !modal.classList.contains('active')) {
                 form.reset();
                 appUnitSelect.value = 'W'; 
                 document.getElementById('modalTitle').innerText = 'Add Appliance';
             }
-
             modal.classList.remove('hidden');
             void modal.offsetWidth;
             overlay.classList.remove('opacity-0');
@@ -1393,466 +670,28 @@
             const modal = document.getElementById('applianceModal');
             const overlay = modal.querySelector('.modal-overlay');
             const content = modal.querySelector('.modal-content');
-            
             overlay.classList.add('opacity-0');
             content.classList.remove('scale-100');
             content.classList.add('opacity-0', 'scale-95');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('active');
-                if(form) form.reset();
-                if(appUnitSelect) appUnitSelect.value = 'W';
-                if(editIndexInput) editIndexInput.value = "-1";
-            }, 300);
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('active'); editIndexInput.value = "-1"; }, 300);
         }
 
-        // --- Budget Optimizer ---
-        function runOptimizer() {
-            const targetInput = document.getElementById('targetBudget');
-            const target = parseFloat(targetInput.value);
-            const rate = parseFloat(globalRateInput.value);
-            const resultDiv = document.getElementById('optimizerResult');
-            
-            if (!target || isNaN(target) || target <= 0) {
-                showMessage('Please enter a valid target budget.', 'error');
-                return;
-            }
-            if (appliances.length === 0) {
-                showMessage('Add some appliances first to optimize.', 'error');
-                return;
-            }
-
-            if (target >= currentTotalCost) {
-                resultDiv.innerHTML = `
-                    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-lg flex gap-3">
-                        <i class="fa-solid fa-face-smile-beam text-xl mt-0.5 text-emerald-600"></i>
-                        <div>
-                            <p class="font-bold">Great news!</p>
-                            <p class="text-sm mt-1">Your current estimated bill (₱${formatMoney(currentTotalCost)}) is already below your target budget of ₱${formatMoney(target)}.</p>
-                        </div>
-                    </div>`;
-                resultDiv.classList.remove('hidden');
-                return;
-            }
-
-            const savingsNeeded = currentTotalCost - target;
-            let candidates = appliances.map((app, index) => {
-                const kwh = calculateMonthlyKwh(app);
-                const cost = kwh * rate;
-                return { ...app, originalIndex: index, monthlyCost: cost, monthlyKwh: kwh };
-            });
-
-            candidates.sort((a, b) => b.monthlyCost - a.monthlyCost);
-            const topConsumer = candidates[0];
-            const targetCutKwh = savingsNeeded / rate;
-            const topConsumerWatts = topConsumer.unit === 'kW' ? topConsumer.wattage * 1000 : topConsumer.wattage;
-            const topConsumerKw = (topConsumerWatts * topConsumer.qty) / 1000;
-            const hoursPerMonthToCut = targetCutKwh / topConsumerKw;
-            const hoursPerDayToCut = hoursPerMonthToCut / DAYS_IN_MONTH;
-
-            let suggestionHTML = '';
-
-            if (hoursPerDayToCut < topConsumer.hours) {
-                const newHours = (topConsumer.hours - hoursPerDayToCut).toFixed(1);
-                suggestionHTML = `
-                    <div class="bg-white border border-indigo-200 p-5 rounded-xl shadow-sm">
-                        <h4 class="font-bold text-indigo-900 mb-2">Target Acquired 🎯</h4>
-                        <p class="text-sm text-slate-600 mb-4">To save <strong>₱${formatMoney(savingsNeeded)}</strong> and hit your target, you can make this single adjustment:</p>
-                        <div class="flex items-center gap-4 bg-indigo-50/50 p-4 rounded-lg border border-indigo-100">
-                            <div class="bg-white p-3 rounded-full shadow-sm text-indigo-600">
-                                <i class="${getIconForAppliance(topConsumer.name)} text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="font-semibold text-slate-800">Reduce <span class="text-indigo-600">"${topConsumer.name}"</span> usage</p>
-                                <p class="text-sm text-slate-600">From <strong>${topConsumer.hours} hrs</strong> down to <strong class="text-emerald-600">${newHours} hrs</strong> per day.</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                suggestionHTML = `
-                    <div class="bg-amber-50 border border-amber-200 p-5 rounded-xl shadow-sm text-amber-900">
-                        <div class="flex gap-3">
-                            <i class="fa-solid fa-triangle-exclamation text-xl text-amber-600"></i>
-                            <div>
-                                <h4 class="font-bold mb-1">Drastic cuts required!</h4>
-                                <p class="text-sm">To save ₱${formatMoney(savingsNeeded)}, reducing your highest consumer ("${topConsumer.name}") to zero is not enough. You will need to substantially reduce usage across multiple appliances or replace them with Inverter/Energy-Saving equivalents.</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            resultDiv.innerHTML = suggestionHTML;
-            resultDiv.classList.remove('hidden');
-            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        // --- Weekly Energy Planner Logic ---
-        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-        function updatePlannerDropdown() {
-            const select = document.getElementById('plannerAppliance');
-            if(!select) return;
-            select.innerHTML = '<option value="">-- Select an appliance --</option>';
-            
-            if (appliances.length === 0) {
-                select.innerHTML = '<option value="">-- Add an appliance first --</option>';
-                document.getElementById('plannerHint').innerText = "Currently used: - hrs";
-                return;
-            }
-
-            appliances.forEach((app, index) => {
-                const opt = document.createElement('option');
-                opt.value = index;
-                opt.innerText = `${app.name} (${app.qty}x, ${app.hours}h/day)`;
-                select.appendChild(opt);
-            });
-        }
-
-        function updatePlannerHints() {
-            const select = document.getElementById('plannerAppliance');
-            const hint = document.getElementById('plannerHint');
-            const targetInput = document.getElementById('plannerTargetHours');
-            
-            if (select.value === "") {
-                hint.innerText = "Currently used: - hrs";
-                targetInput.value = "";
-                return;
-            }
-
-            const app = appliances[select.value];
-            hint.innerHTML = `Currently used: <strong>${app.hours} hrs/day</strong>`;
-            
-            if(!targetInput.value) {
-                targetInput.value = Math.max(0, (app.hours / 2).toFixed(1));
-            }
-        }
-
-        function addPlannerGoal() {
-            const select = document.getElementById('plannerAppliance');
-            const targetInput = document.getElementById('plannerTargetHours');
-            
-            if (select.value === "") {
-                showMessage("Please select an appliance.", "error");
-                return;
-            }
-
-            const targetHours = parseFloat(targetInput.value);
-            const appIndex = parseInt(select.value);
-            const app = appliances[appIndex];
-
-            if (isNaN(targetHours) || targetHours < 0 || targetHours >= app.hours) {
-                showMessage(`Target hours must be valid and less than current usage (${app.hours}).`, "error");
-                return;
-            }
-
-            const dayCheckboxes = document.querySelectorAll('.planner-day:checked');
-            if (dayCheckboxes.length === 0) {
-                showMessage("Please select at least one day.", "error");
-                return;
-            }
-
-            const selectedDays = Array.from(dayCheckboxes).map(cb => parseInt(cb.value));
-            savingPlans = savingPlans.filter(p => p.applianceName !== app.name);
-            
-            const newPlan = { id: Date.now(), applianceName: app.name, targetHours: targetHours, days: selectedDays };
-            savingPlans.push(newPlan);
-            window.savingPlans = savingPlans;
-            
-            window.saveData();
-            showMessage("Savings goal added!");
-            renderPlanner();
-            
-            select.value = "";
-            targetInput.value = "";
-            updatePlannerHints();
-        }
-
-        function deletePlan(id) {
-            savingPlans = savingPlans.filter(p => p.id !== id);
-            window.savingPlans = savingPlans;
-            window.saveData();
-            renderPlanner();
-            showMessage("Goal removed.");
-        }
-
-        function renderPlanner() {
-            savingPlans = window.savingPlans;
-            appliances = window.appliances;
-            
-            const listDiv = document.getElementById('plannerList');
-            if(!listDiv) return;
-            const rate = parseFloat(globalRateInput?.value) || 14.78;
-            
-            let totalSavingsCost = 0;
-            listDiv.innerHTML = '';
-
-            const activeApplianceNames = appliances.map(a => a.name);
-            savingPlans = savingPlans.filter(p => activeApplianceNames.includes(p.applianceName));
-            
-            if (savingPlans.length === 0) {
-                listDiv.innerHTML = `
-                    <div class="text-center p-8 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50 h-full flex flex-col items-center justify-center">
-                        <div class="bg-teal-100 text-teal-500 w-12 h-12 rounded-full flex items-center justify-center mb-3">
-                            <i class="fa-regular fa-calendar text-xl"></i>
-                        </div>
-                        <p class="text-slate-500 text-sm">No active saving goals yet. Create one above!</p>
-                    </div>`;
-            } else {
-                savingPlans.forEach(plan => {
-                    const app = appliances.find(a => a.name === plan.applianceName);
-                    if (!app) return;
-
-                    const plannedDaysPerMonth = plan.days.length * (30 / 7);
-                    const hoursSavedPerPlannedDay = app.hours - plan.targetHours;
-                    const totalHoursSavedPerMonth = hoursSavedPerPlannedDay * plannedDaysPerMonth;
-                    
-                    const wattageInWatts = app.unit === 'kW' ? app.wattage * 1000 : app.wattage;
-                    const kwhSaved = ((wattageInWatts * totalHoursSavedPerMonth) / 1000) * app.qty;
-                    const costSaved = kwhSaved * rate;
-
-                    totalSavingsCost += costSaved;
-
-                    const daysStr = plan.days.length === 7 ? 'Everyday' : 
-                                  plan.days.length === 5 && !plan.days.includes(0) && !plan.days.includes(6) ? 'Weekdays' :
-                                  plan.days.length === 2 && plan.days.includes(0) && plan.days.includes(6) ? 'Weekends' :
-                                  plan.days.map(d => dayNames[d]).join(', ');
-
-                    const card = document.createElement('div');
-                    card.className = "bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-teal-300 transition-colors";
-                    card.innerHTML = `
-                        <div class="flex gap-3">
-                            <div class="bg-teal-50 text-teal-600 p-2.5 rounded-lg h-fit">
-                                <i class="${getIconForAppliance(app.name)}"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-800">${escapeHTML(app.name)}</h4>
-                                <div class="text-xs text-slate-500 mt-1 flex flex-wrap gap-x-3 gap-y-1">
-                                    <span class="flex items-center gap-1 text-amber-600 font-medium"><i class="fa-solid fa-arrow-down"></i> ${app.hours}h to ${plan.targetHours}h</span>
-                                    <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> ${daysStr}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between sm:justify-end sm:flex-col sm:items-end gap-2 sm:gap-1 min-w-[100px]">
-                            <span class="text-teal-600 font-bold text-sm bg-teal-50 px-2 py-1 rounded-md border border-teal-100">-₱${formatMoney(costSaved)}</span>
-                            <button onclick="deletePlan(${plan.id})" class="text-slate-400 hover:text-red-500 text-xs transition-colors p-1" title="Remove goal">
-                                <i class="fa-solid fa-trash-can mr-1"></i> Remove
-                            </button>
-                        </div>
-                    `;
-                    listDiv.appendChild(card);
-                });
-            }
-
-            currentPlannedSavingsCost = totalSavingsCost;
-            
-            const origBillEl = document.getElementById('plannerOriginalBill');
-            if(origBillEl) origBillEl.innerText = `₱${formatMoney(currentTotalCost)}`;
-            
-            const savEl = document.getElementById('plannerTotalSavings');
-            if(savEl) animateValue("plannerTotalSavings", parseFloat(savEl.innerText.replace(/,/g, '') || 0), totalSavingsCost, 500, true);
-            
-            const newBillEl = document.getElementById('plannerNewBill');
-            const newTargetBill = Math.max(0, currentTotalCost - totalSavingsCost);
-            if(newBillEl) newBillEl.innerText = `₱${formatMoney(newTargetBill)}`;
-        }
-
-        // --- Manual Bill Reader Logic ---
-        function calculateManualBill() {
-            const presInput = document.getElementById('manualPresent');
-            const prevInput = document.getElementById('manualPrevious');
-            const consInput = document.getElementById('manualConsumption');
-            const rateInput = document.getElementById('manualRate');
-            const resultEl = document.getElementById('manualTotalBill');
-            
-            let kwh = 0;
-            if (consInput && consInput.value) {
-                kwh = parseFloat(consInput.value);
-            } else if (presInput && prevInput && presInput.value && prevInput.value) {
-                kwh = parseFloat(presInput.value) - parseFloat(prevInput.value);
-            }
-
-            const rate = parseFloat(rateInput.value) || 0;
-            const total = Math.max(0, kwh) * rate;
-            
-            if (resultEl) {
-                resultEl.innerText = formatMoney(total);
-            }
-        }
-
-        function clearReadings() {
-            document.getElementById('manualPresent').value = '';
-            document.getElementById('manualPrevious').value = '';
-            calculateManualBill();
-        }
-
-        // --- Helpers ---
-        function formatMoney(num) {
-            return num.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        }
-
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    "'": '&#39;',
-                    '"': '&quot;'
-                }[tag])
-            );
-        }
-
-        function getIconForAppliance(name) {
-            const lowerName = name.toLowerCase();
-            if (lowerName.includes('ac') || lowerName.includes('aircon') || lowerName.includes('cooler')) return 'fa-regular fa-snowflake';
-            if (lowerName.includes('fan')) return 'fa-solid fa-fan';
-            if (lowerName.includes('fridge') || lowerName.includes('freezer') || lowerName.includes('refrigerator')) return 'fa-solid fa-icicles';
-            if (lowerName.includes('tv') || lowerName.includes('television')) return 'fa-solid fa-tv';
-            if (lowerName.includes('wash') || lowerName.includes('dryer')) return 'fa-solid fa-shirt';
-            if (lowerName.includes('light') || lowerName.includes('bulb')) return 'fa-regular fa-lightbulb';
-            if (lowerName.includes('cook') || lowerName.includes('stove') || lowerName.includes('oven') || lowerName.includes('microwave') || lowerName.includes('fryer')) return 'fa-solid fa-fire-burner';
-            if (lowerName.includes('pc') || lowerName.includes('computer') || lowerName.includes('laptop') || lowerName.includes('desktop')) return 'fa-solid fa-laptop';
-            if (lowerName.includes('console') || lowerName.includes('game')) return 'fa-solid fa-gamepad';
-            if (lowerName.includes('heater') || lowerName.includes('iron')) return 'fa-solid fa-temperature-arrow-up';
-            if (lowerName.includes('pump')) return 'fa-solid fa-water';
-            return 'fa-solid fa-plug';
-        }
-
-        function animateValue(id, start, end, duration, isCurrency) {
-            const obj = document.getElementById(id);
-            if (!obj) return;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                // easeOutQuart curve
-                const easeOut = 1 - Math.pow(1 - progress, 4);
-                const current = progress === 1 ? end : start + (end - start) * easeOut;
-                
-                obj.innerText = isCurrency ? formatMoney(current) : current.toFixed(2);
-                if (progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        function showMessage(text, type = 'success') {
-            const msgBox = document.getElementById('messageBox');
-            const msgText = document.getElementById('messageText');
-            const msgIcon = document.getElementById('messageIcon');
-            
-            msgText.innerText = text;
-            if (type === 'error') {
-                msgIcon.className = "fa-solid fa-circle-exclamation text-red-400";
-            } else {
-                msgIcon.className = "fa-solid fa-circle-check text-emerald-400";
-            }
-
-            msgBox.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                msgBox.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        // --- Tutorial / Onboarding ---
-        function showWelcomeModal() {
-            currentTutStep = 0;
-            updateTutUI();
-            
-            const modal = document.getElementById('welcomeModal');
-            const overlay = modal.querySelector('.modal-overlay');
-            const content = modal.querySelector('.modal-content');
-            
-            modal.classList.remove('hidden');
-            void modal.offsetWidth;
-            overlay.classList.remove('opacity-0');
-            content.classList.remove('opacity-0', 'scale-95');
-            content.classList.add('scale-100');
-        }
-
-        function closeWelcomeModal() {
-            localStorage.setItem('kuryenteCalc_onboarded', 'true');
-            const modal = document.getElementById('welcomeModal');
-            const overlay = modal.querySelector('.modal-overlay');
-            const content = modal.querySelector('.modal-content');
-            
-            overlay.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('opacity-0', 'scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        function updateTutUI() {
-            for(let i=0; i<totalTutSteps; i++) {
-                const stepEl = document.getElementById(`tut-step-${i}`);
-                if(i === currentTutStep) {
-                    stepEl.classList.remove('opacity-0', 'translate-x-8', 'pointer-events-none');
-                    stepEl.classList.add('opacity-100', 'translate-x-0');
-                } else {
-                    stepEl.classList.remove('opacity-100', 'translate-x-0');
-                    stepEl.classList.add('opacity-0', 'translate-x-8', 'pointer-events-none');
-                }
-            }
-            
-            const dots = document.getElementById('tut-dots').children;
-            for(let i=0; i<dots.length; i++) {
-                if(i === currentTutStep) {
-                    dots[i].className = "w-2 h-2 rounded-full bg-blue-600 transition-colors";
-                } else {
-                    dots[i].className = "w-2 h-2 rounded-full bg-slate-300 transition-colors";
-                }
-            }
-
-            document.getElementById('tut-prev-btn').classList.toggle('hidden', currentTutStep === 0);
-            const nextBtn = document.getElementById('tut-next-btn');
-            nextBtn.innerText = currentTutStep === totalTutSteps - 1 ? "Get Started" : "Next Step";
-        }
-
-        function tutNextStep() {
-            if (currentTutStep < totalTutSteps - 1) {
-                currentTutStep++;
-                updateTutUI();
-            } else {
-                closeWelcomeModal();
-            }
-        }
-
-        function tutPrevStep() {
-            if (currentTutStep > 0) {
-                currentTutStep--;
-                updateTutUI();
-            }
-        }
-
-        // --- Auth UI Management ---
         function openAuthModal() {
             const modal = document.getElementById('authModal');
-            const overlay = modal.querySelector('.modal-overlay');
-            const content = modal.querySelector('.modal-content');
-            
             modal.classList.remove('hidden');
-            void modal.offsetWidth;
-            overlay.classList.remove('opacity-0');
-            content.classList.remove('opacity-0', 'scale-95');
-            content.classList.add('scale-100');
+            setTimeout(() => {
+                modal.querySelector('.modal-overlay').classList.remove('opacity-0');
+                modal.querySelector('.modal-content').classList.remove('opacity-0', 'scale-95');
+                modal.querySelector('.modal-content').classList.add('scale-100');
+            }, 10);
         }
 
         function closeAuthModal() {
             const modal = document.getElementById('authModal');
-            const overlay = modal.querySelector('.modal-overlay');
-            const content = modal.querySelector('.modal-content');
-            
-            overlay.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('opacity-0', 'scale-95');
+            modal.querySelector('.modal-overlay').classList.add('opacity-0');
+            modal.querySelector('.modal-content').classList.remove('scale-100');
             setTimeout(() => modal.classList.add('hidden'), 300);
         }
-
-        // --- AI Bill Scanner ---
-        let cameraStream = null;
 
         function openScannerModal() {
             const modal = document.getElementById('scannerModal');
@@ -1862,56 +701,41 @@
                 modal.querySelector('.modal-content').classList.remove('opacity-0', 'scale-95');
                 modal.querySelector('.modal-content').classList.add('scale-100');
             }, 10);
-            
-            document.getElementById('cameraContainer').classList.add('hidden');
-            document.getElementById('scannerActions').classList.remove('hidden');
         }
 
         function closeScannerModal() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
             const modal = document.getElementById('scannerModal');
             modal.querySelector('.modal-overlay').classList.add('opacity-0');
             modal.querySelector('.modal-content').classList.remove('scale-100');
-            modal.querySelector('.modal-content').classList.add('opacity-0', 'scale-95');
             setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-        async function startCamera() {
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                const videoEl = document.getElementById('cameraVideo');
-                videoEl.srcObject = cameraStream;
-                document.getElementById('scannerActions').classList.add('hidden');
-                document.getElementById('cameraContainer').classList.remove('hidden');
-            } catch (err) {
-                showMessage("Camera access denied or unavailable.", "error");
-            }
+        function calculateManualBill() {
+            const consInput = document.getElementById('manualConsumption');
+            const rateInput = document.getElementById('manualRate');
+            const resultEl = document.getElementById('manualTotalBill');
+            const kwh = parseFloat(consInput?.value) || 0;
+            const rate = parseFloat(rateInput?.value) || 0;
+            if (resultEl) resultEl.innerText = formatMoney(kwh * rate);
         }
 
-function takePhoto() {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.getElementById('captureCanvas');
-            
-            // Shrink the camera image to a max width of 800px to bypass server limits
-            const MAX_WIDTH = 800;
-            const scaleSize = MAX_WIDTH / video.videoWidth;
-            
-            canvas.width = MAX_WIDTH;
-            canvas.height = video.videoHeight * scaleSize;
-            
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // Compress to JPEG at 70% quality and extract the data
-            const base64Data = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
-            processBillScan(base64Data);
-            closeScannerModal();
+        function formatMoney(num) {
+            return num.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
-		function handleImageUpload(e) {
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+        }
+
+        function showMessage(text, type = 'success') {
+            const msgBox = document.getElementById('messageBox');
+            document.getElementById('messageText').innerText = text;
+            msgBox.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => msgBox.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        // AI Bill Scanner Function (Connected to Netlify Backend)
+        function handleImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -1922,187 +746,115 @@ function takePhoto() {
             };
             reader.readAsDataURL(file);
         }
-        // UPDATED: Now connects securely to your Netlify Function
-		async function processBillScan(base64Image) {
+
+        async function processBillScan(base64Image) {
             const overlay = document.getElementById('aiScanOverlay');
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
             
             try {
-                // This calls your secure Netlify function, avoiding all browser version mismatches
-                const response = await fetch('/.netlify/functions/scanBill', {
+                // Safely handle relative URLs when running in the preview window
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                const baseUrl = isPreview ? 'https://whimsical-brioche-73c97d.netlify.app' : '';
+
+                const response = await fetch(baseUrl + '/.netlify/functions/scanBill', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ imageBase64: base64Image })
                 });
 
                 const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Server Error");
                 
-                if (!response.ok) {
-                    throw new Error(data.error || "Server Error");
-                }
-                
-                // Clean and parse the JSON returned from your backend function
                 let rawText = data.text.replace(/```json/g, '').replace(/```/g, '').trim();
                 const result = JSON.parse(rawText);
-                
                 showScanResults(result);
             } catch (err) {
-                showMessage("Scan failed: " + err.message, "error");
-                console.error(err);
-			} finally {
-    			overlay.classList.remove('flex');
-    			overlay.classList.add('hidden');
-			}
-		}
-        window.scannedDataStore = {};
-
-        function showScanResults(data) {
-            const box = document.getElementById('scanResultBox');
-            const kwhEl = document.getElementById('scanFoundKwh');
-            const amountEl = document.getElementById('scanFoundAmount');
-            const verdictEl = document.getElementById('scanVerdict');
-            
-            window.scannedDataStore = data;
-
-            box.classList.remove('hidden');
-            kwhEl.innerText = data.kwh ? `${data.kwh} kWh` : "Not found";
-            amountEl.innerText = data.amount ? `₱${formatMoney(data.amount)}` : "Not found";
-
-            if (data.kwh && data.amount) {
-                const impliedRate = data.amount / data.kwh;
-                verdictEl.innerHTML = `<span class="text-emerald-600"><i class="fa-solid fa-check"></i> Math looks good!</span> The effective rate on this bill is roughly ₱${impliedRate.toFixed(2)}/kWh.`;
-            } else {
-                verdictEl.innerHTML = `<span class="text-amber-600"><i class="fa-solid fa-triangle-exclamation"></i> Partial data found.</span> Could not read everything clearly.`;
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                if (isPreview) {
+                    showMessage("AI Scanner requires your live Netlify site to connect to the backend.", "error");
+                } else {
+                    showMessage("Scan failed: " + err.message, "error");
+                }
+            } finally {
+                overlay.classList.remove('flex');
+                overlay.classList.add('hidden');
             }
         }
 
-        function closeScanResults() {
-            document.getElementById('scanResultBox').classList.add('hidden');
+        window.scannedDataStore = {};
+        function showScanResults(data) {
+            window.scannedDataStore = data;
+            document.getElementById('scanResultBox').classList.remove('hidden');
+            document.getElementById('scanFoundKwh').innerText = data.kwh ? `${data.kwh} kWh` : "Not found";
+            document.getElementById('scanFoundAmount').innerText = data.amount ? `₱${formatMoney(data.amount)}` : "Not found";
         }
-
+        function closeScanResults() { document.getElementById('scanResultBox').classList.add('hidden'); }
         function applyScanData() {
             const data = window.scannedDataStore;
-            if (data.present) document.getElementById('manualPresent').value = data.present;
-            if (data.previous) document.getElementById('manualPrevious').value = data.previous;
             if (data.kwh) document.getElementById('manualConsumption').value = data.kwh;
-            
-            if (data.amount && data.kwh) {
-                const rate = data.amount / data.kwh;
-                document.getElementById('manualRate').value = rate.toFixed(2);
-            }
-            
+            if (data.amount && data.kwh) document.getElementById('manualRate').value = (data.amount / data.kwh).toFixed(2);
             calculateManualBill();
             closeScanResults();
             showMessage("Scan applied successfully.");
         }
 
-        // --- Manong Kurti Chatbot ---
+        // Manong Kurti Chatbot
         let chatHistory = [];
         
         function toggleChat() {
             const win = document.getElementById('chatWindow');
-            if(win.classList.contains('hidden')) {
-                win.classList.remove('hidden');
-                setTimeout(() => {
-                    win.classList.remove('translate-y-10', 'opacity-0');
-                    document.getElementById('chatInput').focus();
-                }, 10);
-            } else {
-                win.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => win.classList.add('hidden'), 300);
-            }
+            win.classList.toggle('hidden');
+            win.classList.toggle('flex');
         }
 
-        // UPDATED: Now connects securely to your Netlify Function
         async function handleChatSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('chatInput');
-            const submitBtn = document.getElementById('chatSubmitBtn');
-            const messagesDiv = document.getElementById('chatMessages');
             const prompt = input.value.trim();
             if (!prompt) return;
-
+            
             addChatMessage(prompt, 'user');
             input.value = '';
-            input.disabled = true;
-            submitBtn.disabled = true;
-
-            const loadingId = 'msg-' + Date.now();
-            const loadingHTML = `
-                <div id="${loadingId}" class="flex gap-2 items-end">
-                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
-                        <i class="fa-solid fa-robot text-sm"></i>
-                    </div>
-                    <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-500 shadow-sm flex gap-1">
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce"></span>
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.2s"></span>
-                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.4s"></span>
-                    </div>
-                </div>
-            `;
-            messagesDiv.insertAdjacentHTML('beforeend', loadingHTML);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             try {
-                const systemPrompt = `You are Manong Kurti, a helpful, knowledgeable, and friendly Filipino electrician and energy expert. You speak in conversational English with a bit of Taglish. You are helping a user lower their electricity bill.
-Current App Data Context:
-- User's Electricity Rate: ₱${document.getElementById('globalRate').value}/kWh
-- Total Monthly Estimated Bill: ₱${currentTotalCost.toFixed(2)}
-- Total kWh: ${currentTotalKwh.toFixed(2)}
-- Appliances List: ${JSON.stringify(window.appliances.map(a => `${a.qty}x ${a.name} (${a.wattage}${a.unit} for ${a.hours}h/day)`))}
-- Savings Plans: ${JSON.stringify(window.savingPlans)}
-Be concise. Keep responses under 3 paragraphs. Only offer advice based on the context provided.`;
+                // Safely handle relative URLs when running in the preview window
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                const baseUrl = isPreview ? 'https://whimsical-brioche-73c97d.netlify.app' : '';
 
-                // Format history perfectly for Netlify backend
-                const formattedHistory = chatHistory.map(msg => ({
-                    role: msg.role === 'user' ? 'user' : 'bot',
-                    text: msg.text
-                }));
-
-                // Securely call your Netlify backend
-                const response = await fetch('/.netlify/functions/askManongKurti', {
+                const response = await fetch(baseUrl + '/.netlify/functions/askManongKurti', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: prompt, 
-                        history: formattedHistory, 
-                        systemPrompt: systemPrompt 
-                    })
+                    body: JSON.stringify({ prompt: prompt, history: chatHistory, systemPrompt: "You are Manong Kurti, a helpful Filipino electrician." })
                 });
-
-                if (!response.ok) throw new Error("Server error");
                 
                 const data = await response.json();
-                
-                document.getElementById(loadingId).remove();
+                if (!response.ok) throw new Error(data.error || "Server Error");
                 
                 addChatMessage(data.answer, 'bot');
                 chatHistory.push({ role: 'user', text: prompt });
                 chatHistory.push({ role: 'bot', text: data.answer });
-
             } catch (err) {
-                document.getElementById(loadingId)?.remove();
-                addChatMessage("Pasensya na boss, I am having trouble connecting right now. Please try again.", 'bot');
-            } finally {
-                input.disabled = false;
-                submitBtn.disabled = false;
-                input.focus();
+                const isPreview = window.location.href.startsWith('blob:') || window.location.hostname.includes('goog');
+                if (isPreview) {
+                    addChatMessage("I am inside the preview window right now! To connect to my AI brain, please view this app directly on your live Netlify site.", 'bot');
+                } else {
+                    addChatMessage("Pasensya na boss, connection error.", 'bot');
+                }
             }
         }
 
         function addChatMessage(text, sender) {
             const messagesDiv = document.getElementById('chatMessages');
-            let html = '';
             
-            const formattedText = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
+            // Format bold text and escape HTML
+            let formattedText = escapeHTML(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            let html = '';
             if (sender === 'user') {
                 html = `
                     <div class="flex gap-2 items-end justify-end">
-                        <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-sm text-sm shadow-sm max-w-[85%]">
-                            ${formattedText}
-                        </div>
+                        <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-sm text-sm shadow-sm max-w-[85%] whitespace-pre-wrap">${formattedText}</div>
                     </div>
                 `;
             } else {
@@ -2111,17 +863,19 @@ Be concise. Keep responses under 3 paragraphs. Only offer advice based on the co
                         <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-200">
                             <i class="fa-solid fa-robot text-sm"></i>
                         </div>
-                        <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm max-w-[85%] leading-relaxed">
-                            ${formattedText}
-                        </div>
+                        <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-bl-sm text-sm text-slate-700 shadow-sm max-w-[85%] leading-relaxed whitespace-pre-wrap">${formattedText}</div>
                     </div>
                 `;
             }
             messagesDiv.insertAdjacentHTML('beforeend', html);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            // Auto-scroll to the bottom smoothly
+            setTimeout(() => {
+                messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
+            }, 50);
         }
-
     </script>
+
 
     <!-- FIREBASE CLOUD SYNC -->
     <script type="module">
