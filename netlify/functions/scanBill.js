@@ -22,29 +22,29 @@ exports.handler = async (event) => {
 
     const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
 
-    // Use the new streamlined Interactions API provided by @google/genai
+    // Initialize the new unified client
     const ai = new GoogleGenAI({ apiKey: apiKey });
 
     const prompt = "Analyze this Philippine electricity bill. Extract the following values: 1) Present meter reading 2) Previous meter reading 3) Total actual consumption (kWh) 4) Total Amount Due (PHP). Return ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Strip all commas from numbers. If missing, return null.";
 
-    // We use the modern gemini-3.6-flash model and pass the image data as input
-    const interaction = await ai.interactions.create({
-      model: "gemini-3.6-flash",
-      input: [
-        { text: prompt },
-        { 
-          inlineData: {
-            data: base64Data,
-            mimeType: "image/jpeg"
-          }
-        }
-      ]
+    // Use the standard generateContent method expected in v2+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [
+            prompt,
+            {
+                inlineData: {
+                    data: base64Data,
+                    mimeType: "image/jpeg"
+                }
+            }
+        ]
     });
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: interaction.output_text })
+      body: JSON.stringify({ text: response.text })
     };
   } catch (error) {
     return {
