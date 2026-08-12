@@ -29,7 +29,7 @@ exports.handler = async (event) => {
 
     // Use the standard generateContent method expected in v2+
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         contents: [
             prompt,
             {
