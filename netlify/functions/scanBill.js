@@ -9,11 +9,11 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body);
     const imageBase64 = body.imageBase64;
     
-    // Safely retrieve your environment variable
+    // Using process.env is correct and safe for Netlify
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'Missing API Key in Netlify environment variables' }) };
+      return { statusCode: 500, body: JSON.stringify({ error: 'Server error: Missing API Key' }) };
     }
 
     if (!imageBase64) {
@@ -22,14 +22,14 @@ exports.handler = async (event) => {
 
     const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
 
-    // Explicitly target the v1beta API version which supports gemini-1.5-flash for images
+    // Use v1beta and the updated gemini-3-flash model
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel(
-      { model: 'gemini-2.5-flash' },
+      { model: 'gemini-3-flash' }, 
       { apiVersion: 'v1beta' }
     );
 
-    const prompt = "Analyze this Philippine electricity bill. Extract the following values: 1) Present meter reading 2) Previous meter reading 3) Total actual consumption (kWh) 4) Total Amount Due (PHP). Return ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Strip all commas from numbers. If missing, return null.";
+    const prompt = "You are an expert utility bill parser. Analyze this Philippine electricity bill. Extract the following values exactly as they appear:\n1) Present meter reading\n2) Previous meter reading\n3) Total actual consumption (kWh)\n4) Total Amount Due (PHP).\n\nReturn ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Important: Strip out all commas from the numbers. If a value is missing, return null.";
 
     const imageParts = [{
       inlineData: {
@@ -50,7 +50,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ error: error.message || 'Unknown Server Error' })
     };
   }
 };
