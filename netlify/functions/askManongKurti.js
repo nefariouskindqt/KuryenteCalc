@@ -1,56 +1,40 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenAI } = require('@google/genai');
 
-exports.handler = async (event) => {
-  // Only allow POST requests
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Method Not Allowed' })
-    };
-  }
-
-  try {
-    const { prompt, history, systemPrompt } = JSON.parse(event.body);
-
-    // Fetch API Key from Netlify Environment Variables
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'GEMINI_API_KEY is not configured on Netlify server environment.' })
-      };
+exports.handler = async function(event, context) {
+    if (event.httpMethod !== "POST") {
+        return { statusCode: 405, body: "Method Not Allowed" };
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: systemPrompt
-    });
+    try {
+        const { prompt, history, systemPrompt } = JSON.parse(event.body);
+        const apiKey = process.env.GEMINI_API_KEY;
 
-    // Start chat session with formatted history
-    const chat = model.startChat({
-      history: history.map(item => ({
-        role: item.role === 'bot' ? 'model' : 'user',
-        parts: [{ text: item.text }]
-      }))
-    });
+        if (!apiKey) {
+            console.error("Missing API Key in Netlify Settings!");
+            return { statusCode: 500, body: JSON.stringify({ error: "Server configuration error." }) };
+        }
 
-    const result = await chat.sendMessage(prompt);
-    const response = await result.response;
-    const text = response.text();
+        const ai = new GoogleGenAI({ apiKey: apiKey });
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ answer: text })
-    };
-  } catch (error) {
-    console.error('Error in askManongKurti function:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message || 'Internal Server Error' })
-    };
-  }
+        // The Interactions API allows formatting conversation history easily
+        let combinedInput = systemPrompt + "\n\nConversation History:\n";
+        history.forEach(msg => {
+             combinedInput += `${msg.role === 'user' ? 'User' : 'Kurti'}: ${msg.text}\n`;
+        });
+        combinedInput += `\nUser: ${prompt}`;
+
+        const interaction = await ai.interactions.create({
+            model: "gemini-3.6-flash",
+            input: combinedInput
+        });
+        
+        return { 
+            statusCode: 200, 
+            body: JSON.stringify({ answer: interaction.output_text }) 
+        };
+
+    } catch (error) {
+        console.error("AI Error:", error);
+        return { statusCode: 500, body: JSON.stringify({ error: error.message || "Failed to contact Manong Kurti." }) };
+    }
 };
