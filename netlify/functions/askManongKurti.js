@@ -1,8 +1,6 @@
-const { GoogleGenAI } = require('@google/genai');
-
-exports.handler = async function(event, context) {
+exports.handler = async function(event) {
     if (event.httpMethod !== "POST") {
-        return { statusCode: 405, body: "Method Not Allowed" };
+        return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
     }
 
     try {
@@ -10,30 +8,46 @@ exports.handler = async function(event, context) {
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
-            console.error("Missing API Key in Netlify Settings!");
-            return { statusCode: 500, body: JSON.stringify({ error: "Server configuration error." }) };
+            return { statusCode: 500, body: JSON.stringify({ error: "Missing API Key" }) };
         }
 
-        const ai = new GoogleGenAI({ apiKey: apiKey });
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
         let combinedInput = systemPrompt + "\n\nConversation History:\n";
-        history.forEach(msg => {
+        (history || []).forEach(msg => {
              combinedInput += `${msg.role === 'user' ? 'User' : 'Kurti'}: ${msg.text}\n`;
         });
         combinedInput += `\nUser: ${prompt}`;
 
-        // Use the current stable 2026 model
-        const response = await ai.models.generateContent({
-            model: "gemini-3.6-flash",
-            contents: combinedInput
+        const payload = {
+            contents: [{ role: "user", parts: [{ text: combinedInput }] }]
+        };
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
         });
-        
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                statusCode: response.status,
+                body: JSON.stringify({ error: data.error?.message || "Google API Error" })
+            };
+        }
+
+        const answer = data.candidates[0].content.parts[0].text;
+
         return { 
             statusCode: 200, 
-            body: JSON.stringify({ answer: response.text }) 
+            body: JSON.stringify({ answer: answer }) 
         };
 
     } catch (error) {
-        console.error("AI Error:", error);
-        return { statusCode: 500, body: JSON.stringify({ error: error.message || "Failed to contact Manong Kurti." }) };
+        return { 
+            statusCode: 500, 
+            body: JSON.stringify({ error: String(error) }) 
+        };
     }
