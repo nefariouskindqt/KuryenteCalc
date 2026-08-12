@@ -1,3 +1,5 @@
+const https = require('https');
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -8,18 +10,15 @@ exports.handler = async (event) => {
     const imageBase64 = body.imageBase64;
     const apiKey = process.env.GEMINI_API_KEY;
 
-    if (!apiKey) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'Missing API Key in Netlify environment variables' }) };
+    if (!apiKey || apiKey.trim() === '') {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Missing GEMINI_API_KEY in Netlify environment variables.' }) };
     }
     if (!imageBase64) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'No image data received' }) };
+      return { statusCode: 400, body: JSON.stringify({ error: 'No image data received.' }) };
     }
 
     const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
     
-    // Using native fetch - ZERO dependencies needed!
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
-
     const payload = {
       contents: [{
         role: "user",
@@ -30,33 +29,47 @@ exports.handler = async (event) => {
       }]
     };
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    // Native Node.js request - completely immune to SDK version conflicts!
+    const result = await new Promise((resolve, reject) => {
+        const req = https.request({
+            hostname: 'generativelanguage.googleapis.com',
+            port: 443,
+            path: `/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        }, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => resolve({ statusCode: res.statusCode, data: data }));
+        });
+        
+        req.on('error', e => reject(e));
+        req.write(JSON.stringify(payload));
+        req.end();
     });
 
-    const data = await response.json();
+    const googleData = JSON.parse(result.data);
 
-    // If Google rejects it, send the exact reason to your screen
-    if (!response.ok) {
-      return {
-        statusCode: response.status,
-        body: JSON.stringify({ error: data.error?.message || "Google API Error" })
-      };
+    if (result.statusCode !== 200) {
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ error: googleData.error?.message || "Google API blocked the request." })
+        };
     }
 
-    const textResult = data.candidates[0].content.parts[0].text;
+    const textResult = googleData.candidates[0].content.parts[0].text;
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: textResult })
     };
+
   } catch (error) {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: String(error) })
+      body: JSON.stringify({ error: `Backend crash: ${error.message}` })
     };
   }
+};
