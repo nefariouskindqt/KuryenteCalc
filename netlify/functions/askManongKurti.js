@@ -22,8 +22,9 @@ exports.handler = async function(event, context) {
         });
         combinedInput += `\nUser: ${prompt}`;
 
+        // Use the current stable 2026 model
         const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
+            model: "gemini-3.6-flash",
             contents: combinedInput
         });
         
@@ -36,4 +37,3 @@ exports.handler = async function(event, context) {
         console.error("AI Error:", error);
         return { statusCode: 500, body: JSON.stringify({ error: error.message || "Failed to contact Manong Kurti." }) };
     }
-}
