@@ -16,25 +16,24 @@ exports.handler = async function(event, context) {
 
         const ai = new GoogleGenAI({ apiKey: apiKey });
 
-        // The Interactions API allows formatting conversation history easily
         let combinedInput = systemPrompt + "\n\nConversation History:\n";
         history.forEach(msg => {
              combinedInput += `${msg.role === 'user' ? 'User' : 'Kurti'}: ${msg.text}\n`;
         });
         combinedInput += `\nUser: ${prompt}`;
 
-        const interaction = await ai.interactions.create({
-            model: "gemini-3.6-flash",
-            input: combinedInput
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: combinedInput
         });
         
         return { 
             statusCode: 200, 
-            body: JSON.stringify({ answer: interaction.output_text }) 
+            body: JSON.stringify({ answer: response.text }) 
         };
 
     } catch (error) {
         console.error("AI Error:", error);
         return { statusCode: 500, body: JSON.stringify({ error: error.message || "Failed to contact Manong Kurti." }) };
     }
-};
+}
