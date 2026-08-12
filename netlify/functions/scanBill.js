@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenAI } = require('@google/genai');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -9,11 +9,11 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body);
     const imageBase64 = body.imageBase64;
     
-    // Using process.env is correct and safe for Netlify
+    // Safely retrieve your environment variable
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'Server error: Missing API Key' }) };
+      return { statusCode: 500, body: JSON.stringify({ error: 'Missing API Key in Netlify environment variables' }) };
     }
 
     if (!imageBase64) {
@@ -22,35 +22,35 @@ exports.handler = async (event) => {
 
     const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
 
-    // Use v1beta and the updated gemini-3-flash model
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel(
-      { model: 'gemini-3-flash' }, 
-      { apiVersion: 'v1beta' }
-    );
+    // Use the new streamlined Interactions API provided by @google/genai
+    const ai = new GoogleGenAI({ apiKey: apiKey });
 
-    const prompt = "You are an expert utility bill parser. Analyze this Philippine electricity bill. Extract the following values exactly as they appear:\n1) Present meter reading\n2) Previous meter reading\n3) Total actual consumption (kWh)\n4) Total Amount Due (PHP).\n\nReturn ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Important: Strip out all commas from the numbers. If a value is missing, return null.";
+    const prompt = "Analyze this Philippine electricity bill. Extract the following values: 1) Present meter reading 2) Previous meter reading 3) Total actual consumption (kWh) 4) Total Amount Due (PHP). Return ONLY a valid JSON object using these exact lowercase keys: \"present\", \"previous\", \"kwh\", \"amount\". Strip all commas from numbers. If missing, return null.";
 
-    const imageParts = [{
-      inlineData: {
-        data: base64Data,
-        mimeType: "image/jpeg"
-      }
-    }];
-
-    const result = await model.generateContent([prompt, ...imageParts]);
-    const response = await result.response;
+    // We use the modern gemini-3.6-flash model and pass the image data as input
+    const interaction = await ai.interactions.create({
+      model: "gemini-3.6-flash",
+      input: [
+        { text: prompt },
+        { 
+          inlineData: {
+            data: base64Data,
+            mimeType: "image/jpeg"
+          }
+        }
+      ]
+    });
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: response.text() })
+      body: JSON.stringify({ text: interaction.output_text })
     };
   } catch (error) {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: error.message || 'Unknown Server Error' })
+      body: JSON.stringify({ error: error.message })
     };
   }
 };
